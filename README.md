@@ -7,7 +7,7 @@ java ./bin/UI/chatBox
 java loginForm -->
 
 Run file
-`if($?){javac chatUI.java}; if($?){java chatUI}; del *.class`
+`if($?){javac chatUI.java}; if($?){java chatUI}; del *.class`\
 `if($?){javac loginUI.java}; if($?){java loginUI}; del *.class`
 
 Clean the Object file
