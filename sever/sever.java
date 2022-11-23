@@ -1,4 +1,4 @@
-package ChatHandler.sever;
+package sever;
 
 public class sever {
     public static void main(String[] args) {
