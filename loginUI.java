@@ -80,7 +80,7 @@ public class loginUI extends javax.swing.JFrame {
                 btnLogin.addActionListener(new java.awt.event.ActionListener() {
                         public void actionPerformed(java.awt.event.ActionEvent evt) {
                                 try {
-                                        jButton1ActionPerformed(evt);
+                                        ConnectButtonActionPerformed(evt);
                                 } catch (UnknownHostException e) {
                                         // TODO Auto-generated catch block
                                         e.printStackTrace();
@@ -212,7 +212,7 @@ public class loginUI extends javax.swing.JFrame {
                 pack();
         }
 
-        private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) throws UnknownHostException, IOException {
+        private void ConnectButtonActionPerformed(java.awt.event.ActionEvent evt) throws UnknownHostException, IOException {
                 // Get value from UI
                 String serverIp = iAddress.getText();
                 int serverPort = Integer.parseInt(iPort.getText());
@@ -221,10 +221,11 @@ public class loginUI extends javax.swing.JFrame {
                 System.out.println(serverIp + serverPort + username);
                 // Connect to the server
                 // Create a socket
-                Socket client = new Socket(serverIp, serverPort);
+                Socket sever = new Socket(serverIp, serverPort);
 
+                System.out.println(serverIp + serverPort + username);
                 // Show Chat UI
-                ChatUI = new chatUI(client, serverIp, serverPort, username);
+                ChatUI = new chatUI(sever, serverIp, serverPort, username);
                 ChatUI.setVisible(true);
 
                 // Close login tab

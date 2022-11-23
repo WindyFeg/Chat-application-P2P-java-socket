@@ -18,11 +18,10 @@ public class chatUI extends javax.swing.JFrame {
         try {
             // get our ear and mouse
             out = new ObjectOutputStream(server.getOutputStream());
-            in = new ObjectInputStream(server.getInputStream());
-
             // Tell server our infomation
             out.writeObject("This is my info " + InetAddress.getLocalHost() + " " + serverIp + serverPort + " i am " + username);
-
+            
+            in = new ObjectInputStream(server.getInputStream());
             // listen to server
             String message = (String) in.readObject();
             System.out.println(message);
@@ -45,17 +44,17 @@ public class chatUI extends javax.swing.JFrame {
         jTextArea1 = new javax.swing.JTextArea();
         jPanel2 = new javax.swing.JPanel();
         jTextField1 = new javax.swing.JTextField();
-        sendButton = new javax.swing.JButton();
-        addButton = new javax.swing.JButton();
+        btnSend = new javax.swing.JButton();
+        btnAdd = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         onlinePanel = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        tOnline = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jList2 = new javax.swing.JList<>();
         functionBox = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnlogout = new javax.swing.JButton();
+        btnRequest = new javax.swing.JButton();
         firendPanel = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -73,14 +72,14 @@ public class chatUI extends javax.swing.JFrame {
 
         jTextField1.setText("jTextField1");
 
-        sendButton.setText("Send");
-        sendButton.addActionListener(new java.awt.event.ActionListener() {
+        btnSend.setText("Send");
+        btnSend.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                sendButtonActionPerformed(evt);
+                btnSendActionPerformed(evt);
             }
         });
 
-        addButton.setText("Add");
+        btnAdd.setText("Add");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -90,10 +89,10 @@ public class chatUI extends javax.swing.JFrame {
                                 .addContainerGap()
                                 .addComponent(jTextField1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 54,
+                                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 54,
                                         javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 49,
+                                .addComponent(btnSend, javax.swing.GroupLayout.PREFERRED_SIZE, 49,
                                         javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap()));
         jPanel2Layout.setVerticalGroup(
@@ -103,8 +102,8 @@ public class chatUI extends javax.swing.JFrame {
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 43,
                                                 Short.MAX_VALUE)
-                                        .addComponent(sendButton)
-                                        .addComponent(addButton))
+                                        .addComponent(btnSend)
+                                        .addComponent(btnAdd))
                                 .addContainerGap()));
 
         jPanel1.setBackground(new java.awt.Color(204, 255, 255));
@@ -152,8 +151,8 @@ public class chatUI extends javax.swing.JFrame {
 
         onlinePanel.setBackground(new java.awt.Color(204, 255, 255));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel1.setText("ONLINE");
+        tOnline.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        tOnline.setText("ONLINE");
 
         jList2.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -177,7 +176,7 @@ public class chatUI extends javax.swing.JFrame {
                                 .addGroup(
                                         onlinePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGroup(onlinePanelLayout.createSequentialGroup()
-                                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                        .addComponent(tOnline, javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addGap(0, 94, Short.MAX_VALUE))
                                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING))
@@ -186,16 +185,16 @@ public class chatUI extends javax.swing.JFrame {
                 onlinePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(onlinePanelLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(jLabel1)
+                                .addComponent(tOnline)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jScrollPane2)
                                 .addContainerGap()));
 
         functionBox.setBackground(new java.awt.Color(204, 255, 255));
 
-        jButton1.setText("Log out");
+        btnlogout.setText("Logout");
 
-        jButton2.setText("Request");
+        btnRequest.setText("Request");
 
         javax.swing.GroupLayout functionBoxLayout = new javax.swing.GroupLayout(functionBox);
         functionBox.setLayout(functionBoxLayout);
@@ -203,9 +202,9 @@ public class chatUI extends javax.swing.JFrame {
                 functionBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, functionBoxLayout.createSequentialGroup()
                                 .addGap(16, 16, 16)
-                                .addComponent(jButton2)
+                                .addComponent(btnRequest)
                                 .addGap(18, 18, 18)
-                                .addComponent(jButton1)
+                                .addComponent(btnlogout)
                                 .addContainerGap(16, Short.MAX_VALUE)));
         functionBoxLayout.setVerticalGroup(
                 functionBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -213,8 +212,8 @@ public class chatUI extends javax.swing.JFrame {
                                 .addGap(17, 17, 17)
                                 .addGroup(functionBoxLayout
                                         .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jButton1)
-                                        .addComponent(jButton2))
+                                        .addComponent(btnlogout)
+                                        .addComponent(btnRequest))
                                 .addContainerGap(20, Short.MAX_VALUE)));
 
         firendPanel.setBackground(new java.awt.Color(204, 255, 255));
@@ -302,7 +301,7 @@ public class chatUI extends javax.swing.JFrame {
         pack();
     }
 
-    private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//
+    private void btnSendActionPerformed(java.awt.event.ActionEvent evt) {//
     }
 
     /**
@@ -344,13 +343,13 @@ public class chatUI extends javax.swing.JFrame {
     private ObjectInputStream in;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addButton;
+    private javax.swing.JButton btnAdd;
     private javax.swing.JPanel background;
     private javax.swing.JPanel firendPanel;
     private javax.swing.JPanel functionBox;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton btnlogout;
+    private javax.swing.JButton btnRequest;
+    private javax.swing.JLabel tOnline;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JList<String> jList1;
@@ -364,6 +363,6 @@ public class chatUI extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JPanel messagePanel;
     private javax.swing.JPanel onlinePanel;
-    private javax.swing.JButton sendButton;
+    private javax.swing.JButton btnSend;
     // End of variables declaration//GEN-END:variables
 }
