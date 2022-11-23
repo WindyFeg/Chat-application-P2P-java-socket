@@ -10,7 +10,7 @@ public class chatUI extends javax.swing.JFrame {
 
     public chatUI(Socket server, String serverIp, int serverPort, String username) {
         this.server = server;
-        this. serverIp = serverIp;
+        this.serverIp = serverIp;
         this.serverPort = serverPort;
         this.username = username;
 
@@ -19,8 +19,9 @@ public class chatUI extends javax.swing.JFrame {
             // get our ear and mouse
             out = new ObjectOutputStream(server.getOutputStream());
             // Tell server our infomation
-            out.writeObject("This is my info " + InetAddress.getLocalHost() + " " + serverIp + serverPort + " i am " + username);
-            
+            out.writeObject("This is my info " + InetAddress.getLocalHost() + " " + serverIp + serverPort + " i am "
+                    + username);
+
             in = new ObjectInputStream(server.getInputStream());
             // listen to server
             String message = (String) in.readObject();
@@ -30,13 +31,12 @@ public class chatUI extends javax.swing.JFrame {
             e.printStackTrace();
         }
 
-
-        initComponents();
+        initComponents(username);
     }
 
     @SuppressWarnings("unchecked")
 
-    private void initComponents() {
+    private void initComponents(String username) {
 
         background = new javax.swing.JPanel();
         messagePanel = new javax.swing.JPanel();
@@ -47,18 +47,18 @@ public class chatUI extends javax.swing.JFrame {
         btnSend = new javax.swing.JButton();
         btnAdd = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
+        tUsernname = new javax.swing.JLabel();
         onlinePanel = new javax.swing.JPanel();
         tOnline = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jList2 = new javax.swing.JList<>();
+        lOnline = new javax.swing.JList<>();
         functionBox = new javax.swing.JPanel();
         btnlogout = new javax.swing.JButton();
         btnRequest = new javax.swing.JButton();
         firendPanel = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
+        tFriends = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        lFriends = new javax.swing.JList<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -108,8 +108,8 @@ public class chatUI extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(204, 255, 255));
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel3.setText("Trần Trang Kỳ Phong");
+        tUsernname.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        tUsernname.setText(username);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -117,14 +117,14 @@ public class chatUI extends javax.swing.JFrame {
                 jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 215,
+                                .addComponent(tUsernname, javax.swing.GroupLayout.PREFERRED_SIZE, 215,
                                         javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap(207, Short.MAX_VALUE)));
         jPanel1Layout.setVerticalGroup(
                 jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)));
+                                .addComponent(tUsernname, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)));
 
         javax.swing.GroupLayout messagePanelLayout = new javax.swing.GroupLayout(messagePanel);
         messagePanel.setLayout(messagePanelLayout);
@@ -154,8 +154,8 @@ public class chatUI extends javax.swing.JFrame {
         tOnline.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         tOnline.setText("ONLINE");
 
-        jList2.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+        lOnline.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item a1", "Item 2", "Item 3", "Item 4", "Item 5" };
 
             public int getSize() {
                 return strings.length;
@@ -165,7 +165,7 @@ public class chatUI extends javax.swing.JFrame {
                 return strings[i];
             }
         });
-        jScrollPane2.setViewportView(jList2);
+        jScrollPane2.setViewportView(lOnline);
 
         javax.swing.GroupLayout onlinePanelLayout = new javax.swing.GroupLayout(onlinePanel);
         onlinePanel.setLayout(onlinePanelLayout);
@@ -218,10 +218,10 @@ public class chatUI extends javax.swing.JFrame {
 
         firendPanel.setBackground(new java.awt.Color(204, 255, 255));
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel2.setText("FRIENDS");
+        tFriends.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        tFriends.setText("FRIENDS");
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+        lFriends.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
 
             public int getSize() {
@@ -232,7 +232,7 @@ public class chatUI extends javax.swing.JFrame {
                 return strings[i];
             }
         });
-        jScrollPane1.setViewportView(jList1);
+        jScrollPane1.setViewportView(lFriends);
 
         javax.swing.GroupLayout firendPanelLayout = new javax.swing.GroupLayout(firendPanel);
         firendPanel.setLayout(firendPanelLayout);
@@ -244,14 +244,14 @@ public class chatUI extends javax.swing.JFrame {
                                         firendPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addComponent(jScrollPane1)
                                                 .addGroup(firendPanelLayout.createSequentialGroup()
-                                                        .addComponent(jLabel2)
+                                                        .addComponent(tFriends)
                                                         .addGap(0, 0, Short.MAX_VALUE)))
                                 .addContainerGap()));
         firendPanelLayout.setVerticalGroup(
                 firendPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(firendPanelLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(jLabel2)
+                                .addComponent(tFriends)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 393,
                                         javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -329,7 +329,7 @@ public class chatUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                // new chatUI().setVisible(true);
+                new chatUI(new Socket(), "192.168.1.1", 7777, "WindyFeng").setVisible(true);
             }
         });
     }
@@ -350,10 +350,10 @@ public class chatUI extends javax.swing.JFrame {
     private javax.swing.JButton btnlogout;
     private javax.swing.JButton btnRequest;
     private javax.swing.JLabel tOnline;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JList<String> jList1;
-    private javax.swing.JList<String> jList2;
+    private javax.swing.JLabel tFriends;
+    private javax.swing.JLabel tUsernname;
+    private javax.swing.JList<String> lFriends;
+    private javax.swing.JList<String> lOnline;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
