@@ -3,12 +3,13 @@
 import javax.swing.*;
 import java.awt.*;
 class gui {
+    public static JTextArea t_message;
     public static void main(String args[]) {
 
         //Creating the Frame
         JFrame frame = new JFrame("Chat Frame");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 400);
+        frame.setSize(800, 700);
 
         //Creating the MenuBar and adding components
         JMenuBar mb = new JMenuBar();
@@ -24,7 +25,7 @@ class gui {
         //Creating the panel at bottom and adding components
         JPanel panel = new JPanel(); // the panel is not visible in output
         JLabel label = new JLabel("Enter Text");
-        JTextField tf = new JTextField(100); // accepts upto 10 characters
+        JTextField tf = new JTextField(20); // accepts upto 10 characters
         JButton send = new JButton("Send");
         JButton reset = new JButton("Reset");
         panel.add(label); // Components Added using Flow Layout
@@ -32,13 +33,22 @@ class gui {
         panel.add(send);
         panel.add(reset);
 
-        // Text Area at the Center
-        JTextArea ta = new JTextArea();
+
+        //Create online panel
+        t_message = new JTextArea();
+        t_message.setFont(new Font("Arial", Font.PLAIN, 15));
+        t_message.setSize(450, 300);
+        t_message.setLocation(50, 150);
+        t_message.setLineWrap(true);
+        t_message.setEditable(false);
+        panel.add(t_message);
+
 
         //Adding Components to the frame.
         frame.getContentPane().add(BorderLayout.SOUTH, panel);
         frame.getContentPane().add(BorderLayout.NORTH, mb);
-        frame.getContentPane().add(BorderLayout.CENTER, ta);
+        //frame.getContentPane().add(BorderLayout.EAST, onlineLabel);
+        
         frame.setVisible(true);
     }
 }
