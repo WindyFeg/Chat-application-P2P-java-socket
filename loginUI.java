@@ -220,7 +220,7 @@ public class loginUI extends javax.swing.JFrame {
 
                 System.out.println(serverIp + serverPort + username);
                 // Connect to the server
-                // Create a socket
+                // Create server a socket
                 Socket sever = new Socket(serverIp, serverPort);
 
                 System.out.println(serverIp + serverPort + username);

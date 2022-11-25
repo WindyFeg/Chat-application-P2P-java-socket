@@ -1,9 +1,10 @@
 package peer;
-
+// make this object can turn to byte and vice versa
+import java.io.Serializable;
 import java.io.*;
 import java.util.Vector;
 
-public class peer {
+public class peer implements Serializable{
 
     // private ObjectOutputStream out;		
 	// private ObjectInputStream in;	
@@ -11,6 +12,13 @@ public class peer {
     private String pHost;
     private int pPort;
     private Vector<peer> FriendLists = new Vector();
+
+    public peer (String pName, String pHost, int pPort)
+    {
+        this.pName = pName;
+        this.pHost = pHost;
+        this.pPort = pPort;
+    }
     
     public void set(String pName, String pHost, int pPort)
     {

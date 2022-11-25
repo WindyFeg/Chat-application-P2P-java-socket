@@ -1,7 +1,9 @@
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.Vector;
 
+import peer.peer;
 /**
  *
  * @author USER
@@ -14,24 +16,34 @@ public class chatUI extends javax.swing.JFrame {
         this.serverPort = serverPort;
         this.username = username;
 
+        GetFriendFromServer();
         // Send to server peer information
-        try {
-            // get our ear and mouse
-            out = new ObjectOutputStream(server.getOutputStream());
-            // Tell server our infomation
-            out.writeObject("This is my info " + InetAddress.getLocalHost() + " " + serverIp + serverPort + " i am "
-                    + username);
-
-            in = new ObjectInputStream(server.getInputStream());
-            // listen to server
-            String message = (String) in.readObject();
-            System.out.println(message);
-        } catch (IOException | ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
         initComponents(username);
+    }
+
+    public void GetFriendFromServer()
+    {
+        try {
+                // get our ear and mouse
+                serverOut = new ObjectOutputStream(server.getOutputStream());
+                // Tell server our information
+                serverOut.writeObject(InetAddress.getLocalHost() + ","+ 8888 + "," + username);
+    
+                // Get our data from server 
+                serverIn = new ObjectInputStream(server.getInputStream());
+                myPeer = (peer) serverIn.readObject();
+
+                System.out.println(myPeer.getName());
+                System.out.println("nhan thong tin cua peer");
+
+                // thread running update online list
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+    }
+
+    public void listenOnPeer(){
+
     }
 
     @SuppressWarnings("unchecked")
@@ -339,8 +351,9 @@ public class chatUI extends javax.swing.JFrame {
     private String serverIp;
     private int serverPort;
     private String username;
-    private ObjectOutputStream out;
-    private ObjectInputStream in;
+    private ObjectOutputStream serverOut;
+    private ObjectInputStream serverIn;
+    private peer myPeer;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
