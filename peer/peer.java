@@ -1,6 +1,7 @@
 package peer;
 // make this object can turn to byte and vice versa
 import java.io.Serializable;
+import java.net.Socket;
 import java.io.*;
 import java.util.Vector;
 
@@ -11,6 +12,7 @@ public class peer implements Serializable{
     private String pName;
     private String pHost;
     private int pPort;
+    // private Socket client;
     private Vector<peer> FriendLists = new Vector();
 
     public peer (String pName, String pHost, int pPort)
@@ -18,6 +20,7 @@ public class peer implements Serializable{
         this.pName = pName;
         this.pHost = pHost;
         this.pPort = pPort;
+        // this.client = client;
     }
     
     public void set(String pName, String pHost, int pPort)
@@ -26,6 +29,11 @@ public class peer implements Serializable{
         this.pHost = pHost;
         this.pPort = pPort;
     }
+
+    // public Socket getSocket()
+    // {
+    //     return this.client;
+    // }
 
     public void addFriend(peer peer)
     {
