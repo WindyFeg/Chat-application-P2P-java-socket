@@ -12,10 +12,11 @@ public class peer implements Serializable{
     private String pName;
     private String pHost;
     private int pPort;
+    // can not send a socket to a client
     // private Socket client;
     private Vector<peer> FriendLists = new Vector();
 
-    public peer (String pName, String pHost, int pPort)
+    public peer (String pName, String pHost, int pPort, Socket client)
     {
         this.pName = pName;
         this.pHost = pHost;

@@ -1,9 +1,8 @@
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.Random;
-
 import chat.chatUI;
+
 /**
  *
  * @author USER
@@ -214,7 +213,8 @@ public class loginUI extends javax.swing.JFrame {
                 pack();
         }
 
-        private void ConnectButtonActionPerformed(java.awt.event.ActionEvent evt) throws UnknownHostException, IOException {
+        private void ConnectButtonActionPerformed(java.awt.event.ActionEvent evt)
+                        throws UnknownHostException, IOException {
                 // Get value from UI
                 String serverIp = iAddress.getText();
                 int serverPort = Integer.parseInt(iPort.getText());
@@ -269,6 +269,7 @@ public class loginUI extends javax.swing.JFrame {
                 });
 
         }
+
 
         // Variable
         private chatUI ChatUI;

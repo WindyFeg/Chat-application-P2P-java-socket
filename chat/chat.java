@@ -59,12 +59,28 @@ public class chat {
         }
     }
 
+    public void refreshOnlineList()
+    {
+        try {
+            // PrintWriter callServer =new PrintWriter(server.getOutputStream());
+            // callServer.println("refresh");
+            serverOut.writeObject("call server");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public void ListenOnlineList()
     {
         while(true)
         {
+            // for (peer peer : onlineList) {
+            //     System.out.println(peer.getName() + "\n");
+            // }
             try {
                 onlineList = (Vector<peer>) serverIn.readObject();
+                System.out.println(onlineList);
                 
                 // CLOSE SOCKET
                 if(isConnect == false)
@@ -74,7 +90,6 @@ public class chat {
                     server.close();
                 }
             } catch (Exception e) {
-                // TODO: handle exception
             }
         }
     }

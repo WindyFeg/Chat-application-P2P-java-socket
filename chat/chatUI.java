@@ -1,11 +1,19 @@
 package chat;
+
 import java.net.Socket;
+import java.util.Random;
+import java.awt.event.*;
+
+import javax.swing.AbstractListModel;
+import javax.swing.JList;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  *
  * @author USER
  */
-public class chatUI extends javax.swing.JFrame {
+public class chatUI extends javax.swing.JFrame implements ActionListener {
 
         public chatUI(Socket server, String serverIp, int serverPort, String username) {
                 chatHandle = new chat(server, serverIp, serverPort, username);
@@ -14,8 +22,6 @@ public class chatUI extends javax.swing.JFrame {
                 // Send to server peer information
                 initComponents(username);
         }
-
-        
 
         public void listenOnPeer() {
 
@@ -45,7 +51,7 @@ public class chatUI extends javax.swing.JFrame {
                 firendPanel = new javax.swing.JPanel();
                 tFriends = new javax.swing.JLabel();
                 jScrollPane1 = new javax.swing.JScrollPane();
-                lFriends = new javax.swing.JList<>();
+                lFriends = new JList();
 
                 setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -165,7 +171,7 @@ public class chatUI extends javax.swing.JFrame {
                 tOnline.setText("ONLINE");
 
                 lOnline.setModel(new javax.swing.AbstractListModel<String>() {
-                        String[] strings = {  };
+                        String[] strings = {};
 
                         public int getSize() {
                                 return strings.length;
@@ -244,7 +250,7 @@ public class chatUI extends javax.swing.JFrame {
                 tFriends.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
                 tFriends.setText("FRIENDS");
 
-                lFriends.setModel(new javax.swing.AbstractListModel<String>() {
+                lFriends.setModel(new AbstractListModel() {
                         String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
 
                         public int getSize() {
@@ -256,6 +262,11 @@ public class chatUI extends javax.swing.JFrame {
                         }
                 });
                 jScrollPane1.setViewportView(lFriends);
+                lFriends.addListSelectionListener(new ListSelectionListener() {
+                        public void valueChanged(ListSelectionEvent evt) {
+                                getValueChanged(evt);
+                        }
+                });
 
                 javax.swing.GroupLayout firendPanelLayout = new javax.swing.GroupLayout(firendPanel);
                 firendPanel.setLayout(firendPanelLayout);
@@ -350,12 +361,17 @@ public class chatUI extends javax.swing.JFrame {
         }
 
         private void btnSendActionPerformed(java.awt.event.ActionEvent evt) {
-
+                System.out.println("click");
+                chatHandle.refreshOnlineList();
         }
 
         private void btnlogoutActionPerformed(java.awt.event.ActionEvent evt) {
                 chatHandle.logout();
                 System.out.println("logged out!");
+        }
+
+        public void getValueChanged(ListSelectionEvent evt) {
+                System.out.println((String) lFriends.getSelectedValue());
         }
 
         /**
@@ -418,5 +434,12 @@ public class chatUI extends javax.swing.JFrame {
         private javax.swing.JPanel messagePanel;
         private javax.swing.JPanel onlinePanel;
         private javax.swing.JButton btnSend;
+
         // End of variables declaration//GEN-END:variables
+        @Override
+        public void actionPerformed(ActionEvent e) {
+                if (e.getSource() == lFriends) {
+                        System.out.println("click");
+                }
+        }
 }
