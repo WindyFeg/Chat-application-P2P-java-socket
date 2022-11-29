@@ -3,26 +3,28 @@ package chat;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.Vector;
+import java.util.ArrayList;
+
 import peer.peer;
+import protocols.encode;
+import protocols.tag;
+import protocols.decode;
 
 public class chat {
     // My variable
     private Socket server;
-    private String serverIp;
-    private int serverPort;
     private String username;
     private ObjectOutputStream serverOut;
     private ObjectInputStream serverIn;
     private peer myPeer;
     private boolean isConnect;
-    public static String[] onlineList;
+    public static ArrayList<peer> onlineList;
 
-    public chat(Socket server, String serverIp, int serverPort, String username) {
+    public chat(Socket server, String username,ObjectOutputStream serverOut,ObjectInputStream serverIn ) {
         this.server = server;
-        this.serverIp = serverIp;
-        this.serverPort = serverPort;
         this.username = username;
+        this.serverIn = serverIn;
+        this.serverOut = serverOut;
         isConnect = true;
     }
 
@@ -32,17 +34,15 @@ public class chat {
 
     public void GetFriendFromServer() {
         try {
-            // get our ear and mouse
-            // Tell server our information 2
-            serverOut = new ObjectOutputStream(server.getOutputStream());
-            serverOut.writeObject(InetAddress.getLocalHost() + "," + 8888 + "," + username);
+            // basic se-ci communication
+            // serverOut = new ObjectOutputStream(server.getOutputStream());
+            // serverIn = new ObjectInputStream(server.getInputStream());
 
-            // Get our data from server
-            serverIn = new ObjectInputStream(server.getInputStream());
-            myPeer = (peer) serverIn.readObject();
-            System.out.println("Peer info has been received");
+            // tell server to get friend
+            serverOut.writeObject(tag.GET_ONLINE);
+            serverOut.flush();
 
-            // Communicate with server thread
+            // Listen to update onlineList data
             Thread ListenOnlineListThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -51,30 +51,38 @@ public class chat {
             });
             ListenOnlineListThread.start();
             // thread running update online list
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void refreshOnlineList() {
         try {
-            serverOut.writeObject("refresh");
+            serverOut.writeObject(tag.REFRESH);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public String[] getOnlineList()
-    {
-
-        return onlineList;
+    public String[] getOnlineList() {
+        String res = "";
+        if (onlineList.size() == 0) {
+            return null;
+        }
+        for (peer peer : onlineList) {
+            res+= peer.getName() + "/";
+        }
+        // cut the last /
+        res = res.substring(0, res.length() - 1);
+        return res.split("/");
     }
 
     public void ListenOnlineList() {
         while (true) {
             try {
-                onlineList = (String[]) serverIn.readObject();
-                System.out.println(onlineList);
+                String onlineListXML = (String) serverIn.readObject();
+                onlineList = decode.getOnlineList(onlineListXML);
+                System.out.println("Online list update");
 
                 // CLOSE SOCKET
                 if (isConnect == false) {

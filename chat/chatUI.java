@@ -3,6 +3,8 @@ package chat;
 import java.net.Socket;
 import java.util.Random;
 import java.awt.event.*;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 import javax.swing.AbstractListModel;
 import javax.swing.DefaultListModel;
@@ -16,8 +18,8 @@ import javax.swing.event.ListSelectionListener;
  */
 public class chatUI extends javax.swing.JFrame implements ActionListener {
 
-        public chatUI(Socket server, String serverIp, int serverPort, String username) {
-                chatHandle = new chat(server, serverIp, serverPort, username);
+        public chatUI(Socket server, ObjectInputStream serverIn, ObjectOutputStream serverOut, String username) {
+                chatHandle = new chat(server, username, serverOut, serverIn);
 
                 chatHandle.GetFriendFromServer();
                 // Send to server peer information
@@ -373,7 +375,6 @@ public class chatUI extends javax.swing.JFrame implements ActionListener {
                 pack();
         }
 
-        
         /**
          * @param args the command line arguments
          */
@@ -381,26 +382,27 @@ public class chatUI extends javax.swing.JFrame implements ActionListener {
                 /* Create and display the form */
                 java.awt.EventQueue.invokeLater(new Runnable() {
                         public void run() {
-                                new chatUI(new Socket(), "192.168.1.1", 7777, "WindyFeng").setVisible(true);
+                                // new chatUI(new Socket(), "192.168.1.1", 7777, "WindyFeng").setVisible(true);
                         }
                 });
         }
-        
+
         public void UpdateOnlineListUI(String[] friendList) {
                 lOnline.setModel(itemInl);
                 itemInl.clear();
                 // for (String string : friendList) {
-                //         itemInl.addElement(string);
+                // itemInl.addElement(string);
                 // }
-                for(int i = 0; i< friendList.length;i++)
-                {
+                for (int i = 0; i < friendList.length; i++) {
                         itemInl.addElement(friendList[i]);
                 }
         }
 
         private void btnlRefreshActionPerformed(ActionEvent evt) {
                 System.out.println("Refresh");
+                // call server to get latest online list
                 chatHandle.refreshOnlineList();
+                // get friendList from chatHandle
                 String[] friendList = chatHandle.getOnlineList();
                 if (friendList != null) {
                         UpdateOnlineListUI(friendList);
@@ -422,6 +424,7 @@ public class chatUI extends javax.swing.JFrame implements ActionListener {
         public void getValueChangedOnline(ListSelectionEvent evt) {
                 System.out.println((String) lOnline.getSelectedValue());
         }
+
         // myVariable
         public chat chatHandle;
 

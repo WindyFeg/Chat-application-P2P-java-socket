@@ -1,7 +1,13 @@
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+
+import javax.swing.JLabel;
+
 import chat.chatUI;
+import protocols.tag;
 
 /**
  *
@@ -19,7 +25,8 @@ public class loginUI extends javax.swing.JFrame {
 
                 background = new javax.swing.JPanel();
                 jPanel1 = new javax.swing.JPanel();
-                tTitle = new javax.swing.JLabel();
+                tTitle = new JLabel();
+                tError = new JLabel();
                 jPanel2 = new javax.swing.JPanel();
                 tUsername = new javax.swing.JLabel();
                 iUsername = new javax.swing.JTextField();
@@ -38,6 +45,9 @@ public class loginUI extends javax.swing.JFrame {
 
                 tTitle.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
                 tTitle.setText("WASSAP");
+
+                tError.setFont(new java.awt.Font("Segoe UI", 0, 20));
+                tError.setText("Please chose a different name");
 
                 javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
                 jPanel1.setLayout(jPanel1Layout);
@@ -83,10 +93,10 @@ public class loginUI extends javax.swing.JFrame {
                                 try {
                                         ConnectButtonActionPerformed(evt);
                                 } catch (UnknownHostException e) {
-                                        // TODO Auto-generated catch block
                                         e.printStackTrace();
                                 } catch (IOException e) {
-                                        // TODO Auto-generated catch block
+                                        e.printStackTrace();
+                                } catch (ClassNotFoundException e) {
                                         e.printStackTrace();
                                 }
                         }
@@ -213,7 +223,6 @@ public class loginUI extends javax.swing.JFrame {
                 pack();
         }
 
-        
         /**
          * @param args the command line arguments
          */
@@ -248,30 +257,36 @@ public class loginUI extends javax.swing.JFrame {
                 });
 
         }
-        
-        
+
         private void ConnectButtonActionPerformed(java.awt.event.ActionEvent evt)
-                        throws UnknownHostException, IOException {
+                        throws UnknownHostException, IOException, ClassNotFoundException {
                 // Get value from UI
                 String serverIp = iAddress.getText();
                 int serverPort = Integer.parseInt(iPort.getText());
                 String username = iUsername.getText();
-        
-                System.out.println(serverIp + serverPort + username);
-                // Connect to the server
-                // Create server a socket
-                Socket sever = new Socket(serverIp, serverPort);
-        
-                System.out.println(serverIp + serverPort + username);
+
+                // Connect to the server Create server a socket
+                Socket server = new Socket(serverIp, serverPort);
+                ObjectOutputStream serverOut = new ObjectOutputStream(server.getOutputStream());
+                serverOut.writeObject(username);
+
+                // get Online list
+                ObjectInputStream serverIn = new ObjectInputStream(server.getInputStream());
+                String checkName = (String) serverIn.readObject();
+
+                // Checkname
+                if (!checkName.equals(tag.NAME_VALID)) {
+                        System.out.println("try a different name!");
+                }
+
                 // Show Chat UI
-                ChatUI = new chatUI(sever, serverIp, serverPort, username);
+                ChatUI = new chatUI(server, serverIn, serverOut, username);
                 ChatUI.setVisible(true);
-        
+
                 // Close login tab
                 this.dispose();
                 this.setVisible(false);
         }
-
 
         // Variable
         private chatUI ChatUI;
@@ -280,6 +295,7 @@ public class loginUI extends javax.swing.JFrame {
         private javax.swing.JPanel background;
         private javax.swing.JButton btnLogin;
         private javax.swing.JLabel tTitle;
+        private javax.swing.JLabel tError;
         private javax.swing.JLabel tUsername;
         private javax.swing.JLabel tPort;
         private javax.swing.JLabel tAddress;

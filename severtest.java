@@ -1,42 +1,32 @@
 
 import java.io.Console;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import peer.peer;
-import protocols.*;
+import protocols.tag;
+import protocols.encode;
+import protocols.fillter;
 
 public class severtest {
 
     private static ObjectOutputStream out;
     private static ObjectInputStream in;
     private static PrintWriter writer;
-    public static Vector<peer> pOnlineList = new Vector<>();
-    public static Vector<Socket> sOnlineList = new Vector<>();
+    public static ArrayList<peer> pOnlineList = new ArrayList();
     public static Vector<ClientHandler> cOnlineList = new Vector<>();
-
-    public static void UpdateOnlineList() {
-        for (Socket item : sOnlineList) {
-            try {
-                out = new ObjectOutputStream(item.getOutputStream());
-                out.writeObject(pOnlineList);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     public void UpdateMyFriendList() {
     }
 
     public static void main(String[] args) throws IOException {
 
-        writer = new PrintWriter("userData.txt", "UTF-8");
-
-        System.out.println("This is server");
+        System.out.println("This is server open on port: 7777");
         ServerSocket testSocket = new ServerSocket(7777);
 
         // LISTENING
@@ -72,8 +62,16 @@ public class severtest {
         return newPeerConnection;
     }
 
+    public static boolean checkClientName(String clientName) {
+        for (ClientHandler name : cOnlineList) {
+            if (clientName.equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static void listenOnConnection(ServerSocket testSocket, PrintWriter writer) {
-        peer peerInfo;
         while (true) {
             try {
                 // accept connection
@@ -81,27 +79,27 @@ public class severtest {
 
                 // get basic info of user 1
                 in = new ObjectInputStream(client.getInputStream());
-                String connectionInfo = (String) in.readObject();
-                System.out.println(connectionInfo + " server nhan duoc thong tin cua user");
-
-                // Check user
-                if (checkConnection(connectionInfo)) {
-                    // old user
-                    peerInfo = getOldPeer(connectionInfo);
-                } else {
-                    // new user
-                    peerInfo = saveNewPeer(connectionInfo, client);
-                    System.out.println(peerInfo);
-                }
                 out = new ObjectOutputStream(client.getOutputStream());
-                out.writeObject(peerInfo);
 
-                // Add new peer to online list
-                pOnlineList.add(peerInfo);
-                sOnlineList.add(client);
+                // Client login & check username
+                String clientName = (String) in.readObject();
+                if (checkClientName(clientName)) {
+                    out.writeObject(tag.NAME_INVALID);
+                    break;
+                } else {
+                    out.writeObject(tag.NAME_VALID);
+                    // Add to pOnline pls
+                    pOnlineList.add(new peer(clientName, fillter.getIpAdress(client.getInetAddress()), 8888));
+                }
+
+                // return online list to client
+                String getOnline = (String) in.readObject();
+                if (getOnline.equals(tag.GET_ONLINE)) {
+                    out.writeObject(encode.OnlineList(pOnlineList));
+                }
 
                 // create thread listen for client request
-                ClientHandler pHandler = new ClientHandler(client, in, out);
+                ClientHandler pHandler = new ClientHandler(client, in, out, clientName);
                 Thread t = new Thread(pHandler);
                 cOnlineList.add(pHandler);
                 t.start();
@@ -120,13 +118,20 @@ class ClientHandler implements Runnable {
     ObjectOutputStream clientOut;
     ObjectInputStream clientIn;
     Socket clientSocket;
+    String username;
     boolean isLogin;
 
-    public ClientHandler(Socket clientSocket, ObjectInputStream clientIn, ObjectOutputStream clientOut) {
+    public ClientHandler(Socket clientSocket, ObjectInputStream clientIn, ObjectOutputStream clientOut,
+            String username) {
         this.clientSocket = clientSocket;
         this.clientIn = clientIn;
         this.clientOut = clientOut;
         this.isLogin = true;
+        this.username = username;
+    }
+
+    public String getName() {
+        return this.username;
     }
 
     public String[] listFriend(Vector<peer> peers) {
@@ -152,9 +157,9 @@ class ClientHandler implements Runnable {
 
                 System.out.println(request);
 
-                if (request.equals("refresh")) {
-                    clientOut.writeObject(listFriend(severtest.pOnlineList));
-                    clientOut.flush();
+                if (request.equals(tag.REFRESH)) {
+                    clientOut.writeObject(encode.OnlineList(severtest.pOnlineList));
+                    // clientOut.flush();
                 }
 
             } catch (IOException | ClassNotFoundException e) {
