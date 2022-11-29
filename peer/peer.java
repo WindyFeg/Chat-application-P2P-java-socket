@@ -16,7 +16,7 @@ public class peer implements Serializable{
     // private Socket client;
     private Vector<peer> FriendLists = new Vector();
 
-    public peer (String pName, String pHost, int pPort, Socket client)
+    public peer (String pName, String pHost, int pPort)
     {
         this.pName = pName;
         this.pHost = pHost;

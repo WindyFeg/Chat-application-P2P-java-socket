@@ -213,28 +213,7 @@ public class loginUI extends javax.swing.JFrame {
                 pack();
         }
 
-        private void ConnectButtonActionPerformed(java.awt.event.ActionEvent evt)
-                        throws UnknownHostException, IOException {
-                // Get value from UI
-                String serverIp = iAddress.getText();
-                int serverPort = Integer.parseInt(iPort.getText());
-                String username = iUsername.getText();
-
-                System.out.println(serverIp + serverPort + username);
-                // Connect to the server
-                // Create server a socket
-                Socket sever = new Socket(serverIp, serverPort);
-
-                System.out.println(serverIp + serverPort + username);
-                // Show Chat UI
-                ChatUI = new chatUI(sever, serverIp, serverPort, username);
-                ChatUI.setVisible(true);
-
-                // Close login tab
-                this.dispose();
-                this.setVisible(false);
-        }
-
+        
         /**
          * @param args the command line arguments
          */
@@ -268,6 +247,29 @@ public class loginUI extends javax.swing.JFrame {
                         }
                 });
 
+        }
+        
+        
+        private void ConnectButtonActionPerformed(java.awt.event.ActionEvent evt)
+                        throws UnknownHostException, IOException {
+                // Get value from UI
+                String serverIp = iAddress.getText();
+                int serverPort = Integer.parseInt(iPort.getText());
+                String username = iUsername.getText();
+        
+                System.out.println(serverIp + serverPort + username);
+                // Connect to the server
+                // Create server a socket
+                Socket sever = new Socket(serverIp, serverPort);
+        
+                System.out.println(serverIp + serverPort + username);
+                // Show Chat UI
+                ChatUI = new chatUI(sever, serverIp, serverPort, username);
+                ChatUI.setVisible(true);
+        
+                // Close login tab
+                this.dispose();
+                this.setVisible(false);
         }
 
 

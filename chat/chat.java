@@ -15,10 +15,8 @@ public class chat {
     private ObjectOutputStream serverOut;
     private ObjectInputStream serverIn;
     private peer myPeer;
-    private boolean isConnect; 
-    public static Vector<peer> onlineList = new Vector<>();
-    
-    
+    private boolean isConnect;
+    public static String[] onlineList;
 
     public chat(Socket server, String serverIp, int serverPort, String username) {
         this.server = server;
@@ -28,8 +26,7 @@ public class chat {
         isConnect = true;
     }
 
-    public void logout()
-    {
+    public void logout() {
         isConnect = false;
     }
 
@@ -59,32 +56,28 @@ public class chat {
         }
     }
 
-    public void refreshOnlineList()
-    {
+    public void refreshOnlineList() {
         try {
-            // PrintWriter callServer =new PrintWriter(server.getOutputStream());
-            // callServer.println("refresh");
-            serverOut.writeObject("call server");
+            serverOut.writeObject("refresh");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-
-    public void ListenOnlineList()
+    public String[] getOnlineList()
     {
-        while(true)
-        {
-            // for (peer peer : onlineList) {
-            //     System.out.println(peer.getName() + "\n");
-            // }
+
+        return onlineList;
+    }
+
+    public void ListenOnlineList() {
+        while (true) {
             try {
-                onlineList = (Vector<peer>) serverIn.readObject();
+                onlineList = (String[]) serverIn.readObject();
                 System.out.println(onlineList);
-                
+
                 // CLOSE SOCKET
-                if(isConnect == false)
-                {
+                if (isConnect == false) {
                     serverOut.close();
                     serverIn.close();
                     server.close();
@@ -94,7 +87,7 @@ public class chat {
         }
     }
 
-    public String myFriends (){
+    public String myFriends() {
         String _myFriend = "";
         for (peer _peer : myPeer.getFriends()) {
             _myFriend += _peer.getName() + "\n";

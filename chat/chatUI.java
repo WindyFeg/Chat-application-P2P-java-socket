@@ -5,6 +5,7 @@ import java.util.Random;
 import java.awt.event.*;
 
 import javax.swing.AbstractListModel;
+import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -43,15 +44,16 @@ public class chatUI extends javax.swing.JFrame implements ActionListener {
                 tUsernname = new javax.swing.JLabel();
                 onlinePanel = new javax.swing.JPanel();
                 tOnline = new javax.swing.JLabel();
-                jScrollPane2 = new javax.swing.JScrollPane();
+                scrollOnline = new javax.swing.JScrollPane();
                 lOnline = new javax.swing.JList<>();
                 functionBox = new javax.swing.JPanel();
                 btnlogout = new javax.swing.JButton();
-                btnRequest = new javax.swing.JButton();
-                firendPanel = new javax.swing.JPanel();
+                btnRefresh = new javax.swing.JButton();
+                friendPanel = new javax.swing.JPanel();
                 tFriends = new javax.swing.JLabel();
-                jScrollPane1 = new javax.swing.JScrollPane();
+                scrollFriend = new javax.swing.JScrollPane();
                 lFriends = new JList();
+                itemInl = new DefaultListModel<>();
 
                 setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -181,7 +183,13 @@ public class chatUI extends javax.swing.JFrame implements ActionListener {
                                 return strings[i];
                         }
                 });
-                jScrollPane2.setViewportView(lOnline);
+                scrollOnline.setViewportView(lOnline);
+                lOnline.addListSelectionListener(new ListSelectionListener() {
+                        public void valueChanged(ListSelectionEvent evt) {
+                                getValueChangedOnline(evt);
+                                return;
+                        }
+                });
 
                 javax.swing.GroupLayout onlinePanelLayout = new javax.swing.GroupLayout(onlinePanel);
                 onlinePanel.setLayout(onlinePanelLayout);
@@ -199,7 +207,7 @@ public class chatUI extends javax.swing.JFrame implements ActionListener {
                                                                                                                                 95,
                                                                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                                                                 .addGap(0, 94, Short.MAX_VALUE))
-                                                                                                .addComponent(jScrollPane2,
+                                                                                                .addComponent(scrollOnline,
                                                                                                                 javax.swing.GroupLayout.Alignment.TRAILING))
                                                                 .addContainerGap()));
                 onlinePanelLayout.setVerticalGroup(
@@ -209,7 +217,7 @@ public class chatUI extends javax.swing.JFrame implements ActionListener {
                                                                 .addComponent(tOnline)
                                                                 .addPreferredGap(
                                                                                 javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(jScrollPane2)
+                                                                .addComponent(scrollOnline)
                                                                 .addContainerGap()));
 
                 functionBox.setBackground(new java.awt.Color(204, 255, 255));
@@ -221,7 +229,12 @@ public class chatUI extends javax.swing.JFrame implements ActionListener {
                         }
                 });
 
-                btnRequest.setText("Request");
+                btnRefresh.setText("Refresh");
+                btnRefresh.addActionListener(new java.awt.event.ActionListener() {
+                        public void actionPerformed(java.awt.event.ActionEvent evt) {
+                                btnlRefreshActionPerformed(evt);
+                        }
+                });
 
                 javax.swing.GroupLayout functionBoxLayout = new javax.swing.GroupLayout(functionBox);
                 functionBox.setLayout(functionBoxLayout);
@@ -230,7 +243,7 @@ public class chatUI extends javax.swing.JFrame implements ActionListener {
                                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
                                                                 functionBoxLayout.createSequentialGroup()
                                                                                 .addGap(16, 16, 16)
-                                                                                .addComponent(btnRequest)
+                                                                                .addComponent(btnRefresh)
                                                                                 .addGap(18, 18, 18)
                                                                                 .addComponent(btnlogout)
                                                                                 .addContainerGap(16, Short.MAX_VALUE)));
@@ -242,16 +255,16 @@ public class chatUI extends javax.swing.JFrame implements ActionListener {
                                                                                 .createParallelGroup(
                                                                                                 javax.swing.GroupLayout.Alignment.BASELINE)
                                                                                 .addComponent(btnlogout)
-                                                                                .addComponent(btnRequest))
+                                                                                .addComponent(btnRefresh))
                                                                 .addContainerGap(20, Short.MAX_VALUE)));
 
-                firendPanel.setBackground(new java.awt.Color(204, 255, 255));
+                friendPanel.setBackground(new java.awt.Color(204, 255, 255));
 
                 tFriends.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
                 tFriends.setText("FRIENDS");
 
                 lFriends.setModel(new AbstractListModel() {
-                        String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+                        String[] strings = {};
 
                         public int getSize() {
                                 return strings.length;
@@ -261,36 +274,36 @@ public class chatUI extends javax.swing.JFrame implements ActionListener {
                                 return strings[i];
                         }
                 });
-                jScrollPane1.setViewportView(lFriends);
+                scrollFriend.setViewportView(lFriends);
                 lFriends.addListSelectionListener(new ListSelectionListener() {
                         public void valueChanged(ListSelectionEvent evt) {
-                                getValueChanged(evt);
+                                getValueChangedFriend(evt);
                         }
                 });
 
-                javax.swing.GroupLayout firendPanelLayout = new javax.swing.GroupLayout(firendPanel);
-                firendPanel.setLayout(firendPanelLayout);
-                firendPanelLayout.setHorizontalGroup(
-                                firendPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGroup(firendPanelLayout.createSequentialGroup()
+                javax.swing.GroupLayout friendPanelLayout = new javax.swing.GroupLayout(friendPanel);
+                friendPanel.setLayout(friendPanelLayout);
+                friendPanelLayout.setHorizontalGroup(
+                                friendPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(friendPanelLayout.createSequentialGroup()
                                                                 .addContainerGap()
                                                                 .addGroup(
-                                                                                firendPanelLayout.createParallelGroup(
+                                                                                friendPanelLayout.createParallelGroup(
                                                                                                 javax.swing.GroupLayout.Alignment.LEADING)
-                                                                                                .addComponent(jScrollPane1)
-                                                                                                .addGroup(firendPanelLayout
+                                                                                                .addComponent(scrollFriend)
+                                                                                                .addGroup(friendPanelLayout
                                                                                                                 .createSequentialGroup()
                                                                                                                 .addComponent(tFriends)
                                                                                                                 .addGap(0, 0, Short.MAX_VALUE)))
                                                                 .addContainerGap()));
-                firendPanelLayout.setVerticalGroup(
-                                firendPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGroup(firendPanelLayout.createSequentialGroup()
+                friendPanelLayout.setVerticalGroup(
+                                friendPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(friendPanelLayout.createSequentialGroup()
                                                                 .addContainerGap()
                                                                 .addComponent(tFriends)
                                                                 .addPreferredGap(
                                                                                 javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(jScrollPane1,
+                                                                .addComponent(scrollFriend,
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                                 393,
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -319,7 +332,7 @@ public class chatUI extends javax.swing.JFrame implements ActionListener {
                                                                                 .createParallelGroup(
                                                                                                 javax.swing.GroupLayout.Alignment.LEADING,
                                                                                                 false)
-                                                                                .addComponent(firendPanel,
+                                                                                .addComponent(friendPanel,
                                                                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
                                                                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
                                                                                                 Short.MAX_VALUE)
@@ -335,7 +348,7 @@ public class chatUI extends javax.swing.JFrame implements ActionListener {
                                                                 javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundLayout
                                                                 .createSequentialGroup()
-                                                                .addComponent(firendPanel,
+                                                                .addComponent(friendPanel,
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -360,47 +373,11 @@ public class chatUI extends javax.swing.JFrame implements ActionListener {
                 pack();
         }
 
-        private void btnSendActionPerformed(java.awt.event.ActionEvent evt) {
-                System.out.println("click");
-                chatHandle.refreshOnlineList();
-        }
-
-        private void btnlogoutActionPerformed(java.awt.event.ActionEvent evt) {
-                chatHandle.logout();
-                System.out.println("logged out!");
-        }
-
-        public void getValueChanged(ListSelectionEvent evt) {
-                System.out.println((String) lFriends.getSelectedValue());
-        }
-
+        
         /**
          * @param args the command line arguments
          */
         public static void main(String args[]) {
-                try {
-                        for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager
-                                        .getInstalledLookAndFeels()) {
-                                if ("Nimbus".equals(info.getName())) {
-                                        javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                                        break;
-                                }
-                        }
-                } catch (ClassNotFoundException ex) {
-                        java.util.logging.Logger.getLogger(chatUI.class.getName()).log(java.util.logging.Level.SEVERE,
-                                        null, ex);
-                } catch (InstantiationException ex) {
-                        java.util.logging.Logger.getLogger(chatUI.class.getName()).log(java.util.logging.Level.SEVERE,
-                                        null, ex);
-                } catch (IllegalAccessException ex) {
-                        java.util.logging.Logger.getLogger(chatUI.class.getName()).log(java.util.logging.Level.SEVERE,
-                                        null, ex);
-                } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-                        java.util.logging.Logger.getLogger(chatUI.class.getName()).log(java.util.logging.Level.SEVERE,
-                                        null, ex);
-                }
-                // </editor-fold>
-
                 /* Create and display the form */
                 java.awt.EventQueue.invokeLater(new Runnable() {
                         public void run() {
@@ -408,17 +385,53 @@ public class chatUI extends javax.swing.JFrame implements ActionListener {
                         }
                 });
         }
+        
+        public void UpdateOnlineListUI(String[] friendList) {
+                lOnline.setModel(itemInl);
+                itemInl.clear();
+                // for (String string : friendList) {
+                //         itemInl.addElement(string);
+                // }
+                for(int i = 0; i< friendList.length;i++)
+                {
+                        itemInl.addElement(friendList[i]);
+                }
+        }
 
+        private void btnlRefreshActionPerformed(ActionEvent evt) {
+                System.out.println("Refresh");
+                chatHandle.refreshOnlineList();
+                String[] friendList = chatHandle.getOnlineList();
+                if (friendList != null) {
+                        UpdateOnlineListUI(friendList);
+                }
+        }
+
+        private void btnSendActionPerformed(ActionEvent evt) {
+        }
+
+        private void btnlogoutActionPerformed(ActionEvent evt) {
+                chatHandle.logout();
+                System.out.println("logged out!");
+        }
+
+        public void getValueChangedFriend(ListSelectionEvent evt) {
+                System.out.println((String) lFriends.getSelectedValue());
+        }
+
+        public void getValueChangedOnline(ListSelectionEvent evt) {
+                System.out.println((String) lOnline.getSelectedValue());
+        }
         // myVariable
         public chat chatHandle;
 
         // Variables declaration - do not modify//GEN-BEGIN:variables
         private javax.swing.JButton btnAdd;
         private javax.swing.JPanel background;
-        private javax.swing.JPanel firendPanel;
+        private javax.swing.JPanel friendPanel;
         private javax.swing.JPanel functionBox;
         private javax.swing.JButton btnlogout;
-        private javax.swing.JButton btnRequest;
+        private javax.swing.JButton btnRefresh;
         private javax.swing.JLabel tOnline;
         private javax.swing.JLabel tFriends;
         private javax.swing.JLabel tUsernname;
@@ -426,14 +439,15 @@ public class chatUI extends javax.swing.JFrame implements ActionListener {
         private javax.swing.JList<String> lOnline;
         private javax.swing.JPanel jPanel1;
         private javax.swing.JPanel jPanel2;
-        private javax.swing.JScrollPane jScrollPane1;
-        private javax.swing.JScrollPane jScrollPane2;
+        private javax.swing.JScrollPane scrollFriend;
+        private javax.swing.JScrollPane scrollOnline;
         private javax.swing.JScrollPane jScrollPane3;
         private javax.swing.JTextArea jTextArea1;
         private javax.swing.JTextField jTextField1;
         private javax.swing.JPanel messagePanel;
         private javax.swing.JPanel onlinePanel;
         private javax.swing.JButton btnSend;
+        private DefaultListModel itemInl;
 
         // End of variables declaration//GEN-END:variables
         @Override

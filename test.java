@@ -47,3 +47,15 @@ public class test {
     new test();
   }
 }
+
+        // String res = "";
+        // // if(onlineList.length == 0)
+        // // {
+        // //     return ;
+        // // }
+        // for (String name : onlineList) {
+        //     res+= name + "/";
+        // }
+        // // cut last /
+        // res = res.substring(0, res.length() - 1);
+        // return res.split("/");

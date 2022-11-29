@@ -6,9 +6,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
 
-import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
-
-import javafx.util.converter.PercentageStringConverter;
 import peer.peer;
 import protocols.*;
 
@@ -71,7 +68,7 @@ public class severtest {
         writer.println(connectionInfo);
         String[] cutPcName = connectionInfo.split("/");
         String[] userItems = cutPcName[1].split(",");
-        peer newPeerConnection = new peer(userItems[2], userItems[0], Integer.parseInt(userItems[1]), client);
+        peer newPeerConnection = new peer(userItems[2], userItems[0], Integer.parseInt(userItems[1]));
         return newPeerConnection;
     }
 
@@ -103,22 +100,11 @@ public class severtest {
                 pOnlineList.add(peerInfo);
                 sOnlineList.add(client);
 
-                // Send peer data and friend list to connection
-                // UpdateOnlineList();
-
                 // create thread listen for client request
                 ClientHandler pHandler = new ClientHandler(client, in, out);
                 Thread t = new Thread(pHandler);
                 cOnlineList.add(pHandler);
                 t.start();
-
-                // Thread ListenOnPeerRequestThread = new Thread(new Runnable() {
-                // @Override
-                // public void run() {
-                // ListenOnPeerRequest(client);
-                // }
-                // });
-                // ListenOnPeerRequestThread.start();
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -127,87 +113,68 @@ public class severtest {
             }
         }
     }
-
-    // public static void ListenOnPeerRequest(Socket peerSocket) {
-    // try {
-    // BufferedReader peerIn;
-    // peerIn = new BufferedReader(new
-    // InputStreamReader(peerSocket.getInputStream()));
-    // String peerRequest;
-    // while (true) {
-    // System.out.println("loop " + peerSocket);
-    // peerRequest = peerIn.readLine();
-    // System.out.println("click");
-
-    // if (peerRequest != null) {
-    // System.out.println("Server: " + peerRequest);
-    // continue;
-    // }
-    // }
-    // } catch (IOException e) {
-    // e.printStackTrace();
-    // }
-    // }
 }
 
 class ClientHandler implements Runnable {
 
-    final ObjectOutputStream clientOut;
-    final ObjectInputStream clientIn;
+    ObjectOutputStream clientOut;
+    ObjectInputStream clientIn;
     Socket clientSocket;
     boolean isLogin;
 
-    public ClientHandler(Socket clientSocket,ObjectInputStream clientIn,ObjectOutputStream clientOut)
-    {
+    public ClientHandler(Socket clientSocket, ObjectInputStream clientIn, ObjectOutputStream clientOut) {
         this.clientSocket = clientSocket;
         this.clientIn = clientIn;
         this.clientOut = clientOut;
         this.isLogin = true;
     }
-    
+
+    public String[] listFriend(Vector<peer> peers) {
+        String res = "";
+        if (severtest.pOnlineList.size() == 0) {
+            return null;
+        }
+        for (peer peer : severtest.pOnlineList) {
+            res += peer.getName() + "/";
+        }
+        // cut last /
+        res = res.substring(0, res.length() - 1);
+        return res.split("/");
+    }
+
     @Override
     public void run() {
-        String received;
-        while (true)
-        {
-            try
-            {
+        String request;
+        while (true) {
+            try {
                 // receive the string
-                received = (String) clientIn.readObject();
-                 
-                System.out.println(received);
-                 
-                if(received.equals("logout")){
-                    this.isLogin=false;
-                    this.clientSocket.close();
-                    break;
+                request = (String) clientIn.readObject();
+
+                System.out.println(request);
+
+                if (request.equals("refresh")) {
+                    clientOut.writeObject(listFriend(severtest.pOnlineList));
+                    clientOut.flush();
                 }
-                 
-                // search for the recipient in the connected devices list.
-                // ar is the vector storing client of active users
-                // for (ClientHandler mc : severtest.cOnlineList)
-                // {
-                //     // if the recipient is found, write on its
-                //     // output stream
-                //     if (mc.name.equals(recipient) && mc.isLogin==true)
-                //     {
-                //         mc.dos.writeUTF(this.name+" : "+MsgToSend);
-                //         break;
-                //     }
-                // }
+
             } catch (IOException | ClassNotFoundException e) {
-                 
+
                 e.printStackTrace();
+                this.isLogin = false;
+                try {
+                    this.clientSocket.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+                break;
             }
-             
         }
-        try
-        {
+        try {
             // closing resources
             this.clientIn.close();
             this.clientOut.close();
-             
-        }catch(IOException e){
+
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
