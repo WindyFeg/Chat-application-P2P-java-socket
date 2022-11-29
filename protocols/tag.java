@@ -7,6 +7,10 @@ public class tag {
     public static String GET_ONLINE = "GET_ONLINE";
     public static String REFRESH = "REFRESH";
 
+    public static String ROOT_BEGIN = "<ROOT>";
+    public static String ROOT_END = "</ROOT>";
+
+
 
     public static String SESSION_HEAD = "<SESSION>";
     public static String SESSION_TAIL = "</SESSION>";

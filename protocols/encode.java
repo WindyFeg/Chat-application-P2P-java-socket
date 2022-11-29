@@ -12,7 +12,7 @@ public class encode {
 
     public static String OnlineList(ArrayList<peer> peers)
     {
-        String res = "";
+        String res = "" + tag.ROOT_BEGIN;
         for (peer peer : peers) {
             res+= tag.PEER_HEAD;
             // username
@@ -30,6 +30,6 @@ public class encode {
             res+= tag.PEER_TAIL;
 
         }
-        return res;
+        return res+ tag.ROOT_END;
     }
 }
