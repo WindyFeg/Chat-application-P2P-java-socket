@@ -1,3 +1,5 @@
+import java.util.Random;
+
 import javax.swing.AbstractListModel;
 import javax.swing.JFrame;
 import javax.swing.JList;
@@ -7,6 +9,9 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import peer.peer;
+
 // ww w  . ja  va 2s . co m
 public class test {
   JList jList1 = new JList();
@@ -16,15 +21,15 @@ public class test {
 
   public test() {
     frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-    jList1.setModel(new AbstractListModel() {
-      String[] strings = { "Computer", "Mouse", "HDD" };
-      public int getSize() {
-        return strings.length;
-      }
-      public Object getElementAt(int i) {
-        return strings[i];
-      }
-    });
+    // jList1.setModel(new AbstractListModel() {
+    // String[] strings = { "Computer", "Mouse", "HDD" };
+    // public int getSize() {
+    // return strings.length;
+    // }
+    // public Object getElementAt(int i) {
+    // return strings[i];
+    // }
+    // });
     jList1.addListSelectionListener(new ListSelectionListener() {
       public void valueChanged(ListSelectionEvent evt) {
         jList1ValueChanged(evt);
@@ -37,6 +42,7 @@ public class test {
     frame.pack();
     frame.setVisible(true);
   }
+
   private void jList1ValueChanged(ListSelectionEvent evt) {
     if (!jList1.getValueIsAdjusting()) {
       jTextField2.setText((String) jList1.getSelectedValue());
@@ -44,18 +50,20 @@ public class test {
   }
 
   public static void main(String args[]) {
-    new test();
+    Random rd = new Random();
+    int peer_port = 10000 + rd.nextInt() % 1000;
+    System.out.println(peer_port);
   }
 }
 
-        // String res = "";
-        // // if(onlineList.length == 0)
-        // // {
-        // //     return ;
-        // // }
-        // for (String name : onlineList) {
-        //     res+= name + "/";
-        // }
-        // // cut last /
-        // res = res.substring(0, res.length() - 1);
-        // return res.split("/");
+// String res = "";
+// // if(onlineList.length == 0)
+// // {
+// // return ;
+// // }
+// for (String name : onlineList) {
+// res+= name + "/";
+// }
+// // cut last /
+// res = res.substring(0, res.length() - 1);
+// return res.split("/");

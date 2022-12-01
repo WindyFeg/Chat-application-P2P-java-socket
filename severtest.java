@@ -6,6 +6,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Vector;
 
 import peer.peer;
@@ -88,8 +89,11 @@ public class severtest {
                     break;
                 } else {
                     out.writeObject(tag.NAME_VALID);
+                    // Make a random port for peer
+                    Random rd = new Random();
+                    int peer_port = 10000 + rd.nextInt() % 1000;
                     // Add to pOnline pls
-                    pOnlineList.add(new peer(clientName, fillter.getIpAdress(client.getInetAddress()), 8888));
+                    pOnlineList.add(new peer(clientName, fillter.getIpAdress(client.getInetAddress()), peer_port));
                 }
 
                 // return online list to client

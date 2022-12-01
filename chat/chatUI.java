@@ -18,16 +18,39 @@ import javax.swing.event.ListSelectionListener;
  */
 public class chatUI extends javax.swing.JFrame implements ActionListener {
 
-        public chatUI(Socket server, ObjectInputStream serverIn, ObjectOutputStream serverOut, String username) {
+        private javax.swing.JButton btnAdd;
+        private javax.swing.JPanel background;
+        private javax.swing.JPanel friendPanel;
+        private javax.swing.JPanel functionBox;
+        private javax.swing.JButton btnlogout;
+        private javax.swing.JButton btnRefresh;
+        private javax.swing.JLabel tOnline;
+        private javax.swing.JLabel tFriends;
+        private javax.swing.JLabel tUsernname;
+        private javax.swing.JList<String> lFriends;
+        private javax.swing.JList<String> lOnline;
+        private javax.swing.JPanel jPanel1;
+        private javax.swing.JPanel jPanel2;
+        private javax.swing.JScrollPane scrollFriend;
+        private javax.swing.JScrollPane scrollOnline;
+        private javax.swing.JScrollPane jScrollPane3;
+        private javax.swing.JTextArea jTextArea1;
+        private javax.swing.JTextField jTextField1;
+        private javax.swing.JPanel messagePanel;
+        private javax.swing.JPanel onlinePanel;
+        private javax.swing.JButton btnSend;
+        private DefaultListModel itemInl;
+        // myVariable
+        public chat chatHandle;
+        public static friend_requestUI requestUI;
+
+        public chatUI(Socket server, ObjectInputStream serverIn, ObjectOutputStream serverOut, String username)
+                        throws ClassNotFoundException {
                 chatHandle = new chat(server, username, serverOut, serverIn);
 
                 chatHandle.GetFriendFromServer();
                 // Send to server peer information
                 initComponents(username);
-        }
-
-        public void listenOnPeer() {
-
         }
 
         @SuppressWarnings("unchecked")
@@ -188,7 +211,7 @@ public class chatUI extends javax.swing.JFrame implements ActionListener {
                 scrollOnline.setViewportView(lOnline);
                 lOnline.addListSelectionListener(new ListSelectionListener() {
                         public void valueChanged(ListSelectionEvent evt) {
-                                getValueChangedOnline(evt);
+                                getValuedOnline(evt);
                                 return;
                         }
                 });
@@ -379,7 +402,6 @@ public class chatUI extends javax.swing.JFrame implements ActionListener {
          * @param args the command line arguments
          */
         public static void main(String args[]) {
-                /* Create and display the form */
                 java.awt.EventQueue.invokeLater(new Runnable() {
                         public void run() {
                                 // new chatUI(new Socket(), "192.168.1.1", 7777, "WindyFeng").setVisible(true);
@@ -387,12 +409,13 @@ public class chatUI extends javax.swing.JFrame implements ActionListener {
                 });
         }
 
+        public static void FriendRequest(String requestName) {
+                requestUI = new friend_requestUI(requestName);
+        }
+
         public void UpdateOnlineListUI(String[] friendList) {
                 lOnline.setModel(itemInl);
                 itemInl.clear();
-                // for (String string : friendList) {
-                // itemInl.addElement(string);
-                // }
                 for (int i = 0; i < friendList.length; i++) {
                         itemInl.addElement(friendList[i]);
                 }
@@ -400,8 +423,10 @@ public class chatUI extends javax.swing.JFrame implements ActionListener {
 
         private void btnlRefreshActionPerformed(ActionEvent evt) {
                 System.out.println("Refresh");
+
                 // call server to get latest online list
                 chatHandle.refreshOnlineList();
+
                 // get friendList from chatHandle
                 String[] friendList = chatHandle.getOnlineList();
                 if (friendList != null) {
@@ -421,38 +446,12 @@ public class chatUI extends javax.swing.JFrame implements ActionListener {
                 System.out.println((String) lFriends.getSelectedValue());
         }
 
-        public void getValueChangedOnline(ListSelectionEvent evt) {
-                System.out.println((String) lOnline.getSelectedValue());
+        public void getValuedOnline(ListSelectionEvent evt) {
+                String peerSelect = (String) lOnline.getSelectedValue();
+                System.out.println(peerSelect);
+                if(chatHandle.isMypeer(peerSelect)) {System.out.println("Error: You can not chat with yourself!");}
         }
 
-        // myVariable
-        public chat chatHandle;
-
-        // Variables declaration - do not modify//GEN-BEGIN:variables
-        private javax.swing.JButton btnAdd;
-        private javax.swing.JPanel background;
-        private javax.swing.JPanel friendPanel;
-        private javax.swing.JPanel functionBox;
-        private javax.swing.JButton btnlogout;
-        private javax.swing.JButton btnRefresh;
-        private javax.swing.JLabel tOnline;
-        private javax.swing.JLabel tFriends;
-        private javax.swing.JLabel tUsernname;
-        private javax.swing.JList<String> lFriends;
-        private javax.swing.JList<String> lOnline;
-        private javax.swing.JPanel jPanel1;
-        private javax.swing.JPanel jPanel2;
-        private javax.swing.JScrollPane scrollFriend;
-        private javax.swing.JScrollPane scrollOnline;
-        private javax.swing.JScrollPane jScrollPane3;
-        private javax.swing.JTextArea jTextArea1;
-        private javax.swing.JTextField jTextField1;
-        private javax.swing.JPanel messagePanel;
-        private javax.swing.JPanel onlinePanel;
-        private javax.swing.JButton btnSend;
-        private DefaultListModel itemInl;
-
-        // End of variables declaration//GEN-END:variables
         @Override
         public void actionPerformed(ActionEvent e) {
                 if (e.getSource() == lFriends) {

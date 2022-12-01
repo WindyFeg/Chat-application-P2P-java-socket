@@ -270,11 +270,10 @@ public class loginUI extends javax.swing.JFrame {
                 ObjectOutputStream serverOut = new ObjectOutputStream(server.getOutputStream());
                 serverOut.writeObject(username);
 
-                // get Online list
                 ObjectInputStream serverIn = new ObjectInputStream(server.getInputStream());
                 String checkName = (String) serverIn.readObject();
 
-                // Checkname
+                // CheckName
                 if (!checkName.equals(tag.NAME_VALID)) {
                         System.out.println("try a different name!");
                 }
