@@ -29,6 +29,11 @@ public class decode {
         return peer;
     }
 
+    public static String FriendRequest(String code) {
+        Document document = convertStringToXML(code);
+        return document.getElementsByTagName("FRIEND_REQUEST").item(0).getTextContent();
+    }
+
     public static ArrayList<peer> getOnlineList(String code) {
         ArrayList<peer> onlinelist = new ArrayList<peer>();
 
@@ -36,24 +41,24 @@ public class decode {
 
         NodeList node_list = document.getElementsByTagName("PEER");
 
-        for(int i = 0; i < node_list.getLength(); i = i + 1) {
+        for (int i = 0; i < node_list.getLength(); i = i + 1) {
             Node node = node_list.item(i);
-            if(node.getNodeType() == Node.ELEMENT_NODE) {
-                    Element element = (Element) node;
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                Element element = (Element) node;
 
-                    String name = element
+                String name = element
                         .getElementsByTagName("PEER_NAME")
                         .item(0).getTextContent();
-                    String host = element
+                String host = element
                         .getElementsByTagName("PEER_IP")
                         .item(0).getTextContent();
-                    Integer port = Integer.parseInt(element
+                Integer port = Integer.parseInt(element
                         .getElementsByTagName("PEER_PORT")
                         .item(0).getTextContent());
-                    
-                    peer new_peer = new peer(name, host,port);
-                    onlinelist.add(new_peer);
-            }	
+
+                peer new_peer = new peer(name, host, port);
+                onlinelist.add(new_peer);
+            }
         }
 
         return onlinelist;

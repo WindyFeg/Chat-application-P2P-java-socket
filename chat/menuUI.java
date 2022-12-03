@@ -1,102 +1,401 @@
 package chat;
 
-import javax.swing.*;
-import java.awt.*;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.Random;
 import java.awt.event.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import peer.peer;
+import protocols.tag;
+
+import javax.swing.AbstractListModel;
+import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
- * menuUI
+ *
+ * @author USER
  */
-public class menuUI extends JFrame
-        implements ActionListener {
-    private JLabel WelcomeLabel;
-    private JLabel Username;
-    private JLabel OnlineLabel;
-    private JLabel FriendLabel;
-    private Container c;
-    private JButton btnLogout;
-    private JButton btnRefresh;
-    private JList OnlineList;
-    private JList FriendList;
+public class menuUI extends javax.swing.JFrame implements ActionListener {
 
-    menuUI() {
+        // private javax.swing.JButton btnAdd;
+        private javax.swing.JPanel background;
+        private javax.swing.JPanel friendPanel;
+        private javax.swing.JPanel functionBox;
+        private javax.swing.JButton btnlogout;
+        private javax.swing.JButton btnRefresh;
+        private javax.swing.JLabel tOnline;
+        private javax.swing.JLabel tFriends;
+        private javax.swing.JLabel tUsernname;
+        private javax.swing.JList<String> lFriends;
+        private javax.swing.JList<String> lOnline;
+        // private javax.swing.JPanel jPanel1;
+        // private javax.swing.JPanel jPanel2;
+        private javax.swing.JScrollPane scrollFriend;
+        private javax.swing.JScrollPane scrollOnline;
+        // private javax.swing.JScrollPane jScrollPane3;
+        // private javax.swing.JTextArea jTextArea1;
+        // private javax.swing.JTextField jTextField1;
+        private javax.swing.JPanel messagePanel;
+        private javax.swing.JPanel onlinePanel;
+        // private javax.swing.JButton btnSend;
+        private DefaultListModel itemInl;
+        // myVariable
+        public menu chatHandle;
+        public static friend_requestUI requestUI;
 
-        setTitle("Friend Request!");
-        setBounds(300, 90, 600, 575);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setResizable(false);
+        public menuUI(Socket server, ObjectInputStream serverIn, ObjectOutputStream serverOut, String username)
+                        throws ClassNotFoundException {
+                chatHandle = new menu(server, username, serverOut, serverIn);
 
-        c = getContentPane();
-        c.setLayout(null);
+                chatHandle.GetFriendFromServer();
+                // Send to server peer information
+                initComponents(username);
+        }
 
-        // big Label Friend Request
-        WelcomeLabel = new JLabel("Welcome");
-        WelcomeLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        WelcomeLabel.setSize(300, 25);
-        WelcomeLabel.setLocation(25, 25);
-        c.add(WelcomeLabel);
+        @SuppressWarnings("unchecked")
 
-        // Name request
-        Username = new JLabel("WIndyFeng");
-        Username.setFont(new Font("Arial", Font.PLAIN, 18));
-        Username.setSize(300, 25);
-        Username.setLocation(150, 25);
-        c.add(Username);
+        private void initComponents(String username) {
 
-        OnlineLabel = new JLabel("Online");
-        OnlineLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        OnlineLabel.setSize(100, 25);
-        OnlineLabel.setLocation(75, 75);
-        c.add(OnlineLabel);
+                background = new javax.swing.JPanel();
+                messagePanel = new javax.swing.JPanel();
+                // jScrollPane3 = new javax.swing.JScrollPane();
+                // jTextArea1 = new javax.swing.JTextArea();
+                // jPanel2 = new javax.swing.JPanel();
+                // jTextField1 = new javax.swing.JTextField();
+                // btnSend = new javax.swing.JButton();
+                // btnAdd = new javax.swing.JButton();
+                // jPanel1 = new javax.swing.JPanel();
+                tUsernname = new javax.swing.JLabel();
+                onlinePanel = new javax.swing.JPanel();
+                tOnline = new javax.swing.JLabel();
+                scrollOnline = new javax.swing.JScrollPane();
+                lOnline = new javax.swing.JList<>();
+                functionBox = new javax.swing.JPanel();
+                btnlogout = new javax.swing.JButton();
+                btnRefresh = new javax.swing.JButton();
+                friendPanel = new javax.swing.JPanel();
+                tFriends = new javax.swing.JLabel();
+                scrollFriend = new javax.swing.JScrollPane();
+                lFriends = new JList();
+                itemInl = new DefaultListModel<>();
 
-        FriendLabel = new JLabel("Friend");
-        FriendLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        FriendLabel.setSize(100, 25);
-        FriendLabel.setLocation(300, 75);
-        c.add(FriendLabel);
+                setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        String week[] = { "Monday", "Tuesday", "Wednesday",
-                "Thursday", "Friday", "Saturday", "Sunday" };
-        OnlineList = new JList<>(week);
-        OnlineList.setSize(200, 350);
-        OnlineList.setLocation(25, 100);
-        c.add(OnlineList);
+                background.setBackground(new java.awt.Color(204, 204, 204));
 
-        String week2[] = { "Monday", "Tuesday", "Wednesday",
-                "Thursday", "Friday", "Saturday", "Sunday" };
-        FriendList = new JList<>(week2);
-        FriendList.setSize(200, 350);
-        FriendList.setLocation(250, 100);
-        c.add(FriendList);
+                // jTextArea1.setColumns(20);
+                // jTextArea1.setRows(5);
+                // jScrollPane3.setViewportView(jTextArea1);
 
-        btnRefresh = new JButton("Refresh");
-        btnRefresh.setFont(new Font("Arial", Font.PLAIN, 15));
-        btnRefresh.setSize(100, 25);
-        btnRefresh.setLocation(25, 475);
-        btnRefresh.addActionListener(this);
-        c.add(btnRefresh);
+                // JPanel2
 
-        btnLogout = new JButton("Logout");
-        btnLogout.setFont(new Font("Arial", Font.PLAIN, 15));
-        btnLogout.setSize(100, 25);
-        btnLogout.setLocation(450, 475);
-        btnLogout.addActionListener(this);
-        c.add(btnLogout);
+                // Online
+                onlinePanel.setBackground(new java.awt.Color(204, 255, 255));
 
-        // set visible the damn thing =))
-        setVisible(true);
+                tOnline.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+                tOnline.setText("ONLINE");
 
-    }
+                lOnline.setModel(new javax.swing.AbstractListModel<String>() {
+                        String[] strings = {};
 
-    public static void main(String[] args) {
-        menuUI a = new menuUI();
+                        public int getSize() {
+                                return strings.length;
+                        }
 
-    }
+                        public String getElementAt(int i) {
+                                return strings[i];
+                        }
+                });
+                scrollOnline.setViewportView(lOnline);
+                lOnline.addListSelectionListener(new ListSelectionListener() {
+                        public void valueChanged(ListSelectionEvent evt) {
+                                JList source = (JList) evt.getSource();
+                                if (!evt.getValueIsAdjusting()) {
+                                        // do something
+                                        try {
+                                                getValuedOnline(evt, source);
+                                        } catch (UnknownHostException e) {
+                                                // TODO Auto-generated catch block
+                                                e.printStackTrace();
+                                        } catch (ClassNotFoundException e) {
+                                                // TODO Auto-generated catch block
+                                                e.printStackTrace();
+                                        } catch (IOException e) {
+                                                // TODO Auto-generated catch block
+                                                e.printStackTrace();
+                                        }
+                                }
+                                return;
+                        }
+                });
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
+                javax.swing.GroupLayout onlinePanelLayout = new javax.swing.GroupLayout(onlinePanel);
+                onlinePanel.setLayout(onlinePanelLayout);
+                onlinePanelLayout.setHorizontalGroup(
+                                onlinePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(onlinePanelLayout.createSequentialGroup()
+                                                                .addContainerGap()
+                                                                .addGroup(
+                                                                                onlinePanelLayout.createParallelGroup(
+                                                                                                javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                                .addGroup(onlinePanelLayout
+                                                                                                                .createSequentialGroup()
+                                                                                                                .addComponent(tOnline,
+                                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                                95,
+                                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                                                .addGap(0, 94, Short.MAX_VALUE))
+                                                                                                .addComponent(scrollOnline,
+                                                                                                                javax.swing.GroupLayout.Alignment.TRAILING))
+                                                                .addContainerGap()));
+                onlinePanelLayout.setVerticalGroup(
+                                onlinePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(onlinePanelLayout.createSequentialGroup()
+                                                                .addContainerGap()
+                                                                .addComponent(tOnline)
+                                                                .addPreferredGap(
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(scrollOnline)
+                                                                .addContainerGap()));
 
-    }
+                // FuctionBox
+                functionBox.setBackground(new java.awt.Color(204, 255, 255));
 
+                btnlogout.setText("Logout");
+                btnlogout.addActionListener(new java.awt.event.ActionListener() {
+                        public void actionPerformed(java.awt.event.ActionEvent evt) {
+                                btnlogoutActionPerformed(evt);
+                        }
+                });
+
+                btnRefresh.setText("Refresh");
+                btnRefresh.addActionListener(new java.awt.event.ActionListener() {
+                        public void actionPerformed(java.awt.event.ActionEvent evt) {
+                                btnlRefreshActionPerformed(evt);
+                        }
+                });
+
+                javax.swing.GroupLayout functionBoxLayout = new javax.swing.GroupLayout(functionBox);
+                functionBox.setLayout(functionBoxLayout);
+                functionBoxLayout.setHorizontalGroup(
+                                functionBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
+                                                                functionBoxLayout.createSequentialGroup()
+                                                                                .addGap(16, 16, 16)
+                                                                                .addComponent(btnRefresh)
+                                                                                .addGap(18, 18, 18)
+                                                                                .addComponent(btnlogout)
+                                                                                .addContainerGap(16, Short.MAX_VALUE)));
+                functionBoxLayout.setVerticalGroup(
+                                functionBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(functionBoxLayout.createSequentialGroup()
+                                                                .addGap(17, 17, 17)
+                                                                .addGroup(functionBoxLayout
+                                                                                .createParallelGroup(
+                                                                                                javax.swing.GroupLayout.Alignment.BASELINE)
+                                                                                .addComponent(btnlogout)
+                                                                                .addComponent(btnRefresh))
+                                                                .addContainerGap(20, Short.MAX_VALUE)));
+
+                // Friend Panel
+                friendPanel.setBackground(new java.awt.Color(204, 255, 255));
+
+                tFriends.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+                tFriends.setText("FRIENDS");
+
+                lFriends.setModel(new AbstractListModel() {
+                        String[] strings = {};
+
+                        public int getSize() {
+                                return strings.length;
+                        }
+
+                        public String getElementAt(int i) {
+                                return strings[i];
+                        }
+                });
+                scrollFriend.setViewportView(lFriends);
+                lFriends.addListSelectionListener(new ListSelectionListener() {
+                        public void valueChanged(ListSelectionEvent evt) {
+                                getValueChangedFriend(evt);
+                        }
+                });
+
+                javax.swing.GroupLayout friendPanelLayout = new javax.swing.GroupLayout(friendPanel);
+                friendPanel.setLayout(friendPanelLayout);
+                friendPanelLayout.setHorizontalGroup(
+                                friendPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(friendPanelLayout.createSequentialGroup()
+                                                                .addContainerGap()
+                                                                .addGroup(
+                                                                                friendPanelLayout.createParallelGroup(
+                                                                                                javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                                .addComponent(scrollFriend)
+                                                                                                .addGroup(friendPanelLayout
+                                                                                                                .createSequentialGroup()
+                                                                                                                .addComponent(tFriends)
+                                                                                                                .addGap(0, 0, Short.MAX_VALUE)))
+                                                                .addContainerGap()));
+                friendPanelLayout.setVerticalGroup(
+                                friendPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(friendPanelLayout.createSequentialGroup()
+                                                                .addContainerGap()
+                                                                .addComponent(tFriends)
+                                                                .addPreferredGap(
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(scrollFriend,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                393,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                Short.MAX_VALUE)));
+
+                javax.swing.GroupLayout backgroundLayout = new javax.swing.GroupLayout(background);
+                background.setLayout(backgroundLayout);
+                backgroundLayout.setHorizontalGroup(
+                                backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundLayout
+                                                                .createSequentialGroup()
+                                                                .addComponent(onlinePanel,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(messagePanel,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                Short.MAX_VALUE)
+                                                                .addPreferredGap(
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addGroup(backgroundLayout
+                                                                                .createParallelGroup(
+                                                                                                javax.swing.GroupLayout.Alignment.LEADING,
+                                                                                                false)
+                                                                                .addComponent(friendPanel,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                Short.MAX_VALUE)
+                                                                                .addComponent(functionBox,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                Short.MAX_VALUE))));
+                backgroundLayout.setVerticalGroup(
+                                backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(messagePanel, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(onlinePanel, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundLayout
+                                                                .createSequentialGroup()
+                                                                .addComponent(friendPanel,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(functionBox,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)));
+
+                javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+                getContentPane().setLayout(layout);
+                layout.setHorizontalGroup(
+                                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(background, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+                layout.setVerticalGroup(
+                                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(background, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+
+                pack();
+        }
+
+        /**
+         * @param args the command line arguments
+         */
+        public static void main(String args[]) {
+                java.awt.EventQueue.invokeLater(new Runnable() {
+                        public void run() {
+                                // new chatUI(new Socket(), "192.168.1.1", 7777, "WindyFeng").setVisible(true);
+                        }
+                });
+        }
+
+        public static void FriendRequest(String requestName) {
+                requestUI = new friend_requestUI(requestName);
+        }
+
+        public void UpdateOnlineListUI(String[] friendList) {
+                lOnline.setModel(itemInl);
+                itemInl.clear();
+                for (int i = 0; i < friendList.length; i++) {
+                        itemInl.addElement(friendList[i]);
+                }
+        }
+
+        private void btnlRefreshActionPerformed(ActionEvent evt) {
+                System.out.println("Refresh");
+
+                // call server to get latest online list
+                chatHandle.refreshOnlineList();
+
+                // get friendList from chatHandle
+                String[] friendList = chatHandle.getOnlineList();
+                if (friendList != null) {
+                        UpdateOnlineListUI(friendList);
+                }
+        }
+
+        private void btnlogoutActionPerformed(ActionEvent evt) {
+                chatHandle.logout();
+                System.out.println("logged out!");
+        }
+
+        public void getValueChangedFriend(ListSelectionEvent evt) {
+                System.out.println((String) lFriends.getSelectedValue());
+        }
+
+        public void getValuedOnline(ListSelectionEvent evt, JList source)
+                        throws UnknownHostException, IOException, ClassNotFoundException {
+                String peerSelect = (String) source.getSelectedValue();
+                System.out.println(peerSelect);
+                // Check select
+                if (chatHandle.isMypeer(peerSelect)) {
+                        System.out.println("Error: You can not chat with yourself!");
+                        return;
+                        // send friend request
+                }
+                peer requestPeer = chatHandle.FindPeer(peerSelect);
+                chatHandle.ConnectToPeer(requestPeer);
+
+        }
+
+        public static int showDialog(String msg, boolean type) {
+                JFrame frameMessage = new JFrame();
+                if (type)
+                        return JOptionPane.showConfirmDialog(
+                                        frameMessage, msg, null,
+                                        JOptionPane.YES_NO_OPTION);
+                else
+                        JOptionPane.showMessageDialog(frameMessage, msg);
+                return tag.INVALID;
+
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+                if (e.getSource() == lFriends) {
+                        System.out.println("click");
+                }
+        }
 }

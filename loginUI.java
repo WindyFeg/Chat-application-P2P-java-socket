@@ -6,7 +6,7 @@ import java.net.UnknownHostException;
 
 import javax.swing.JLabel;
 
-import chat.chatUI;
+import chat.menuUI;
 import protocols.tag;
 
 /**
@@ -279,7 +279,7 @@ public class loginUI extends javax.swing.JFrame {
                 }
 
                 // Show Chat UI
-                ChatUI = new chatUI(server, serverIn, serverOut, username);
+                ChatUI = new menuUI(server, serverIn, serverOut, username);
                 ChatUI.setVisible(true);
 
                 // Close login tab
@@ -288,7 +288,7 @@ public class loginUI extends javax.swing.JFrame {
         }
 
         // Variable
-        private chatUI ChatUI;
+        private menuUI ChatUI;
 
         // UI Variable
         private javax.swing.JPanel background;
