@@ -6,11 +6,15 @@ public class tag {
     public static String NAME_VALID = "NAME_VALID";
     public static String GET_ONLINE = "GET_ONLINE";
     public static String REFRESH = "REFRESH";
-    public static String WHAT_YOUR_NAME = "REFRESH";
+    public static String WHAT_YOUR_NAME = "WHAT_YOUR_NAME";
+    public static String FRIEND_REQUEST = "FRIEND_REQUEST";
+    public static String CHAT_REQUEST = "CHAT_REQUEST";
     public static String DENY = "DENY";
 
     public static String FRIEND_REQUEST_HEAD = "<FRIEND_REQUEST>";
     public static String FRIEND_REQUEST_TAIL = "</FRIEND_REQUEST>";
+    public static String CHAT_REQUEST_HEAD = "<CHAT_REQUEST>";
+    public static String CHAT_REQUEST_TAIL = "</CHAT_REQUEST>";
 
     public static String ROOT_BEGIN = "<ROOT>";
     public static String ROOT_END = "</ROOT>";

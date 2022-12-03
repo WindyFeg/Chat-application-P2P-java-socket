@@ -19,6 +19,19 @@ import protocols.*;
 
 public class decode {
 
+    public static String requestType(String code) {
+        Document document = convertStringToXML(code);
+        String requestType = document.getElementsByTagName("FRIEND_REQUEST").item(0).getTextContent();
+        if (requestType != null) {
+            return tag.FRIEND_REQUEST;
+        }
+        requestType = document.getElementsByTagName("CHAT_REQUEST").item(0).getTextContent();
+        if (requestType != null) {
+            return tag.CHAT_REQUEST;
+        }
+        return "";
+    }
+
     public static peer getPeerInfo(String code) {
         Document document = convertStringToXML(code);
 
@@ -29,9 +42,9 @@ public class decode {
         return peer;
     }
 
-    public static String FriendRequest(String code) {
+    public static String peerRequest(String code, String typeDecode) {
         Document document = convertStringToXML(code);
-        return document.getElementsByTagName("FRIEND_REQUEST").item(0).getTextContent();
+        return document.getElementsByTagName(typeDecode).item(0).getTextContent();
     }
 
     public static ArrayList<peer> getOnlineList(String code) {

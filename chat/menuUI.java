@@ -33,11 +33,11 @@ public class menuUI extends javax.swing.JFrame implements ActionListener {
         private javax.swing.JLabel tOnline;
         private javax.swing.JLabel tFriends;
         private javax.swing.JLabel tUsernname;
-        private javax.swing.JList<String> lFriends;
+        private static javax.swing.JList<String> lFriends;
         private javax.swing.JList<String> lOnline;
         // private javax.swing.JPanel jPanel1;
         // private javax.swing.JPanel jPanel2;
-        private javax.swing.JScrollPane scrollFriend;
+        private javax.swing.JScrollPane scrollFriends;
         private javax.swing.JScrollPane scrollOnline;
         // private javax.swing.JScrollPane jScrollPane3;
         // private javax.swing.JTextArea jTextArea1;
@@ -45,7 +45,8 @@ public class menuUI extends javax.swing.JFrame implements ActionListener {
         private javax.swing.JPanel messagePanel;
         private javax.swing.JPanel onlinePanel;
         // private javax.swing.JButton btnSend;
-        private DefaultListModel itemInl;
+        private DefaultListModel itemInlOnline;
+        private static DefaultListModel itemInlFriends;
         // myVariable
         public menu chatHandle;
         public static friend_requestUI requestUI;
@@ -82,9 +83,10 @@ public class menuUI extends javax.swing.JFrame implements ActionListener {
                 btnRefresh = new javax.swing.JButton();
                 friendPanel = new javax.swing.JPanel();
                 tFriends = new javax.swing.JLabel();
-                scrollFriend = new javax.swing.JScrollPane();
+                scrollFriends = new javax.swing.JScrollPane();
                 lFriends = new JList();
-                itemInl = new DefaultListModel<>();
+                itemInlOnline = new DefaultListModel<>();
+                itemInlFriends = new DefaultListModel<>();
 
                 setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -210,7 +212,7 @@ public class menuUI extends javax.swing.JFrame implements ActionListener {
                 tFriends.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
                 tFriends.setText("FRIENDS");
 
-                lFriends.setModel(new AbstractListModel() {
+                lFriends.setModel(new javax.swing.AbstractListModel<String>() {
                         String[] strings = {};
 
                         public int getSize() {
@@ -220,11 +222,18 @@ public class menuUI extends javax.swing.JFrame implements ActionListener {
                         public String getElementAt(int i) {
                                 return strings[i];
                         }
+
                 });
-                scrollFriend.setViewportView(lFriends);
+                scrollFriends.setViewportView(lFriends);
                 lFriends.addListSelectionListener(new ListSelectionListener() {
                         public void valueChanged(ListSelectionEvent evt) {
-                                getValueChangedFriend(evt);
+                                JList source = (JList) evt.getSource();
+                                if (!evt.getValueIsAdjusting()) {
+                                        // do something
+                                        getValueFriend(evt, source);
+
+                                }
+                                return;
                         }
                 });
 
@@ -237,7 +246,7 @@ public class menuUI extends javax.swing.JFrame implements ActionListener {
                                                                 .addGroup(
                                                                                 friendPanelLayout.createParallelGroup(
                                                                                                 javax.swing.GroupLayout.Alignment.LEADING)
-                                                                                                .addComponent(scrollFriend)
+                                                                                                .addComponent(scrollFriends)
                                                                                                 .addGroup(friendPanelLayout
                                                                                                                 .createSequentialGroup()
                                                                                                                 .addComponent(tFriends)
@@ -250,7 +259,7 @@ public class menuUI extends javax.swing.JFrame implements ActionListener {
                                                                 .addComponent(tFriends)
                                                                 .addPreferredGap(
                                                                                 javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(scrollFriend,
+                                                                .addComponent(scrollFriends,
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                                 393,
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -335,14 +344,6 @@ public class menuUI extends javax.swing.JFrame implements ActionListener {
                 requestUI = new friend_requestUI(requestName);
         }
 
-        public void UpdateOnlineListUI(String[] friendList) {
-                lOnline.setModel(itemInl);
-                itemInl.clear();
-                for (int i = 0; i < friendList.length; i++) {
-                        itemInl.addElement(friendList[i]);
-                }
-        }
-
         private void btnlRefreshActionPerformed(ActionEvent evt) {
                 System.out.println("Refresh");
 
@@ -350,7 +351,7 @@ public class menuUI extends javax.swing.JFrame implements ActionListener {
                 chatHandle.refreshOnlineList();
 
                 // get friendList from chatHandle
-                String[] friendList = chatHandle.getOnlineList();
+                String[] friendList = chatHandle.getList(chatHandle.onlineList);
                 if (friendList != null) {
                         UpdateOnlineListUI(friendList);
                 }
@@ -361,7 +362,8 @@ public class menuUI extends javax.swing.JFrame implements ActionListener {
                 System.out.println("logged out!");
         }
 
-        public void getValueChangedFriend(ListSelectionEvent evt) {
+        public void getValueFriend(ListSelectionEvent evt, JList source) {
+                // connect to chat
                 System.out.println((String) lFriends.getSelectedValue());
         }
 
@@ -390,6 +392,23 @@ public class menuUI extends javax.swing.JFrame implements ActionListener {
                         JOptionPane.showMessageDialog(frameMessage, msg);
                 return tag.INVALID;
 
+        }
+
+        public static void addNewFriend(String[] FriendList) {
+                lFriends.setModel(itemInlFriends);
+                itemInlFriends.clear();
+                for (int i = 0; i < FriendList.length; i++) {
+                        itemInlFriends.addElement(FriendList[i]);
+                }
+                return;
+        }
+
+        public void UpdateOnlineListUI(String[] friendList) {
+                lOnline.setModel(itemInlOnline);
+                itemInlOnline.clear();
+                for (int i = 0; i < friendList.length; i++) {
+                        itemInlOnline.addElement(friendList[i]);
+                }
         }
 
         @Override
