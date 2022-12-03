@@ -18,7 +18,7 @@ import javax.swing.event.ListSelectionListener;
  */
 public class chatUI extends javax.swing.JFrame implements ActionListener {
 
-        private javax.swing.JButton btnAdd;
+        // private javax.swing.JButton btnAdd;
         private javax.swing.JPanel background;
         private javax.swing.JPanel friendPanel;
         private javax.swing.JPanel functionBox;
@@ -29,16 +29,16 @@ public class chatUI extends javax.swing.JFrame implements ActionListener {
         private javax.swing.JLabel tUsernname;
         private javax.swing.JList<String> lFriends;
         private javax.swing.JList<String> lOnline;
-        private javax.swing.JPanel jPanel1;
-        private javax.swing.JPanel jPanel2;
+        // private javax.swing.JPanel jPanel1;
+        // private javax.swing.JPanel jPanel2;
         private javax.swing.JScrollPane scrollFriend;
         private javax.swing.JScrollPane scrollOnline;
-        private javax.swing.JScrollPane jScrollPane3;
-        private javax.swing.JTextArea jTextArea1;
-        private javax.swing.JTextField jTextField1;
+        // private javax.swing.JScrollPane jScrollPane3;
+        // private javax.swing.JTextArea jTextArea1;
+        // private javax.swing.JTextField jTextField1;
         private javax.swing.JPanel messagePanel;
         private javax.swing.JPanel onlinePanel;
-        private javax.swing.JButton btnSend;
+        // private javax.swing.JButton btnSend;
         private DefaultListModel itemInl;
         // myVariable
         public chat chatHandle;
@@ -59,13 +59,13 @@ public class chatUI extends javax.swing.JFrame implements ActionListener {
 
                 background = new javax.swing.JPanel();
                 messagePanel = new javax.swing.JPanel();
-                jScrollPane3 = new javax.swing.JScrollPane();
-                jTextArea1 = new javax.swing.JTextArea();
-                jPanel2 = new javax.swing.JPanel();
-                jTextField1 = new javax.swing.JTextField();
-                btnSend = new javax.swing.JButton();
-                btnAdd = new javax.swing.JButton();
-                jPanel1 = new javax.swing.JPanel();
+                // jScrollPane3 = new javax.swing.JScrollPane();
+                // jTextArea1 = new javax.swing.JTextArea();
+                // jPanel2 = new javax.swing.JPanel();
+                // jTextField1 = new javax.swing.JTextField();
+                // btnSend = new javax.swing.JButton();
+                // btnAdd = new javax.swing.JButton();
+                // jPanel1 = new javax.swing.JPanel();
                 tUsernname = new javax.swing.JLabel();
                 onlinePanel = new javax.swing.JPanel();
                 tOnline = new javax.swing.JLabel();
@@ -84,114 +84,13 @@ public class chatUI extends javax.swing.JFrame implements ActionListener {
 
                 background.setBackground(new java.awt.Color(204, 204, 204));
 
-                jTextArea1.setColumns(20);
-                jTextArea1.setRows(5);
-                jScrollPane3.setViewportView(jTextArea1);
+                // jTextArea1.setColumns(20);
+                // jTextArea1.setRows(5);
+                // jScrollPane3.setViewportView(jTextArea1);
 
-                jPanel2.setBackground(new java.awt.Color(204, 255, 255));
+                // JPanel2
 
-                jTextField1.setText("jTextField1");
-
-                btnSend.setText("Send");
-                btnSend.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                btnSendActionPerformed(evt);
-                        }
-                });
-
-                btnAdd.setText("Add");
-
-                javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-                jPanel2.setLayout(jPanel2Layout);
-                jPanel2Layout.setHorizontalGroup(
-                                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGroup(jPanel2Layout.createSequentialGroup()
-                                                                .addContainerGap()
-                                                                .addComponent(jTextField1)
-                                                                .addPreferredGap(
-                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(btnAdd,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                                54,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(
-                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(btnSend,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                                49,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addContainerGap()));
-                jPanel2Layout.setVerticalGroup(
-                                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout
-                                                                .createSequentialGroup()
-                                                                .addContainerGap()
-                                                                .addGroup(jPanel2Layout.createParallelGroup(
-                                                                                javax.swing.GroupLayout.Alignment.BASELINE)
-                                                                                .addComponent(jTextField1,
-                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                                                43,
-                                                                                                Short.MAX_VALUE)
-                                                                                .addComponent(btnSend)
-                                                                                .addComponent(btnAdd))
-                                                                .addContainerGap()));
-
-                jPanel1.setBackground(new java.awt.Color(204, 255, 255));
-
-                tUsernname.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-                tUsernname.setText(username);
-
-                javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-                jPanel1.setLayout(jPanel1Layout);
-                jPanel1Layout.setHorizontalGroup(
-                                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                                                .addContainerGap()
-                                                                .addComponent(tUsernname,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                                215,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addContainerGap(207, Short.MAX_VALUE)));
-                jPanel1Layout.setVerticalGroup(
-                                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                                                .addContainerGap()
-                                                                .addComponent(tUsernname,
-                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                                29, Short.MAX_VALUE)));
-
-                javax.swing.GroupLayout messagePanelLayout = new javax.swing.GroupLayout(messagePanel);
-                messagePanel.setLayout(messagePanelLayout);
-                messagePanelLayout.setHorizontalGroup(
-                                messagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
-                                                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
-                messagePanelLayout.setVerticalGroup(
-                                messagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGroup(messagePanelLayout.createSequentialGroup()
-                                                                .addComponent(jPanel1,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(
-                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                                Short.MAX_VALUE)
-                                                                .addComponent(jScrollPane3,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                                394,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(
-                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(jPanel2,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addContainerGap()));
-
+                // Online
                 onlinePanel.setBackground(new java.awt.Color(204, 255, 255));
 
                 tOnline.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -245,6 +144,7 @@ public class chatUI extends javax.swing.JFrame implements ActionListener {
                                                                 .addComponent(scrollOnline)
                                                                 .addContainerGap()));
 
+                // FuctionBox
                 functionBox.setBackground(new java.awt.Color(204, 255, 255));
 
                 btnlogout.setText("Logout");
@@ -283,6 +183,7 @@ public class chatUI extends javax.swing.JFrame implements ActionListener {
                                                                                 .addComponent(btnRefresh))
                                                                 .addContainerGap(20, Short.MAX_VALUE)));
 
+                // Friend Panel
                 friendPanel.setBackground(new java.awt.Color(204, 255, 255));
 
                 tFriends.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -449,7 +350,10 @@ public class chatUI extends javax.swing.JFrame implements ActionListener {
         public void getValuedOnline(ListSelectionEvent evt) {
                 String peerSelect = (String) lOnline.getSelectedValue();
                 System.out.println(peerSelect);
-                if(chatHandle.isMypeer(peerSelect)) {System.out.println("Error: You can not chat with yourself!");}
+                // Check select
+                if (chatHandle.isMypeer(peerSelect)) {
+                        System.out.println("Error: You can not chat with yourself!");
+                }
         }
 
         @Override
