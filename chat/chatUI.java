@@ -5,6 +5,9 @@ import javax.swing.event.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import chat.*;
@@ -20,15 +23,17 @@ public class chatUI extends JFrame
     private JButton btnSend;
     private JButton btnFile;
     private JTextField iMessage;
-    private JTextArea aMessage;
+    private static JTextArea aMessage;
     private chat chatHandler;
+    private static String oldMsg;
 
-    chatUI(Socket socketChat, String username, String peername) {
-        chatHandler = new chat(socketChat, username, peername);
-        initComponents();
+    chatUI(Socket socketChat, String username, String peername, ObjectInputStream in, ObjectOutputStream out)
+            throws IOException {
+        chatHandler = new chat(socketChat, username, peername, in, out);
+        initComponents(peername);
     }
 
-    private void initComponents() {
+    private void initComponents(String peerName) {
         setTitle("Friend Request!");
         setBounds(300, 90, 460, 575);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -39,7 +44,7 @@ public class chatUI extends JFrame
         container.setBackground(new java.awt.Color(204, 204, 204));
 
         // Name request
-        Username = new JLabel("WIndyFeng");
+        Username = new JLabel("Chat with " + peerName);
         Username.setFont(new Font("Arial", Font.PLAIN, 18));
         Username.setSize(200, 25);
         Username.setLocation(125, 25);
@@ -87,12 +92,29 @@ public class chatUI extends JFrame
         setVisible(true);
     }
 
-    public static void main(String[] args) {
+    public static void updateMsg(String msg) {
+        oldMsg = aMessage.getText();
+        aMessage.setText(oldMsg + msg);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnSend) {
+            String msg = iMessage.getText();
+            iMessage.setText("");
+            try {
+                chatHandler.SendMessage(msg);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
 
+        if (e.getSource() == btnFile) {
+
+        }
+        if (e.getSource() == btnExit) {
+
+        }
     }
 
 }

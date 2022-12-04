@@ -32,6 +32,7 @@ public class menu {
         isConnect = true;
     }
 
+    // call server to get newest online user
     public void refreshOnlineList() {
         try {
             serverOut.writeObject(tag.REFRESH);
@@ -40,6 +41,7 @@ public class menu {
         }
     }
 
+    // return list of Online/Friend ->String for UI render
     public static String[] getList(ArrayList<peer> List) {
         String res = "";
         if (List.size() == 0) {
@@ -57,6 +59,7 @@ public class menu {
         isConnect = false;
     }
 
+    // get friend list on peer -> will remove?
     public String myFriends() {
         String _myFriend = "";
         for (peer _peer : myPeer.getFriends()) {
@@ -66,10 +69,12 @@ public class menu {
         return _myFriend;
     }
 
+    // return my peer
     public static peer getMyPeer() {
         return FindPeer(username);
     }
 
+    // find peer on online List
     public static peer FindPeer(String name) {
         for (peer peer : onlineList) {
             if (name.equals(peer.getName())) {
@@ -80,6 +85,7 @@ public class menu {
         return null;
     }
 
+    // check if it is myPeer
     public boolean isMypeer(String name) {
         if (name == null)
             return true;
@@ -89,7 +95,18 @@ public class menu {
         return false;
     }
 
-    public static void ConnectToPeer(peer peerServer) throws UnknownHostException, IOException, ClassNotFoundException {
+    // add new friend
+    public static void AddFriend(String requestName) {
+        if (friendList == null) {
+            friendList = new ArrayList<>();
+        }
+        friendList.add(FindPeer(requestName));
+        return;
+    }
+
+    // send friend request and wait for answer
+    public static void SendFriendRequest(peer peerServer)
+            throws UnknownHostException, IOException, ClassNotFoundException {
         Socket peerServerSocket = new Socket(peerServer.getHost(), peerServer.getPort());
 
         ObjectOutputStream serverPeerOut = new ObjectOutputStream(peerServerSocket.getOutputStream());
@@ -107,9 +124,34 @@ public class menu {
             AddFriend(peerServer.getName());
             menuUI.addNewFriend(getList(friendList));
         }
-
+        serverPeerOut.close();
+        serverPeerIn.close();
+        peerServerSocket.close();
     }
 
+    public static void SendChatRequest(peer peerServer)
+            throws UnknownHostException, IOException, ClassNotFoundException {
+        Socket peerServerSocket = new Socket(peerServer.getHost(), peerServer.getPort());
+        ObjectOutputStream serverPeerOut = new ObjectOutputStream(peerServerSocket.getOutputStream());
+
+        serverPeerOut.writeObject(encode.ChatRequest(getMyPeer()));
+
+        ObjectInputStream serverPeerIn = new ObjectInputStream(peerServerSocket.getInputStream());
+        String respone = (String) serverPeerIn.readObject();
+
+        if (respone.equals(tag.DENY)) {
+            peerServerSocket.close();
+            return;
+        } else {
+            // establish chat
+            chatUI chat = new chatUI(peerServerSocket, username, peerServer.getName(), serverPeerIn, serverPeerOut);
+        }
+        // serverPeerOut.close();
+        // serverPeerIn.close();
+        // peerServerSocket.close();
+    }
+
+    // initial tell server to get online list
     public void GetFriendFromServer() throws ClassNotFoundException {
         try {
 
@@ -146,6 +188,7 @@ public class menu {
         }
     }
 
+    // loop listen new online list
     public void ListenOnlineList() {
         while (true) {
             try {
@@ -164,14 +207,7 @@ public class menu {
         }
     }
 
-    public static void AddFriend(String requestName) {
-        if (friendList == null) {
-            friendList = new ArrayList<>();
-        }
-        friendList.add(FindPeer(requestName));
-        return;
-    }
-
+    // loop listen on peer
     public void ListenPeer(int port) throws IOException, ClassNotFoundException {
 
         System.out.println("listenning on " + port);
@@ -203,8 +239,11 @@ public class menu {
                 otherPeerOut.writeObject(tag.ACCEPT);
                 AddFriend(requestName);
                 menuUI.addNewFriend(getList(friendList));
+                otherPeer.close();
 
-            } else {
+            }
+
+            if (requestType.equals(tag.CHAT_REQUEST)) {
                 // Chat request
                 String requestName = decode.peerRequest(request, tag.CHAT_REQUEST);
                 System.out.println(requestName);
@@ -216,8 +255,10 @@ public class menu {
                     otherPeer.close();
                 }
                 // Start to chat
-                chatUI newChatUI = new chatUI(otherPeer, username, requestName);
+                otherPeerOut.writeObject(tag.ACCEPT);
+                chatUI Chat = new chatUI(otherPeer, username, requestName, otherPeerIn, otherPeerOut);
             }
+
         }
 
     }

@@ -15,6 +15,10 @@ public class encode {
         return tag.FRIEND_REQUEST_HEAD + peer.getName() + tag.FRIEND_REQUEST_TAIL;
     }
 
+    public static String ChatRequest(peer peer) {
+        return tag.CHAT_REQUEST_HEAD + peer.getName() + tag.CHAT_REQUEST_TAIL;
+    }
+
     public static String OnlineList(ArrayList<peer> peers) {
         String res = "" + tag.ROOT_BEGIN;
         for (peer peer : peers) {

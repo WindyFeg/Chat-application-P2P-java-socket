@@ -15,6 +15,24 @@ import protocols.tag;
  */
 public class loginUI extends javax.swing.JFrame {
 
+        // Variable
+        private menuUI ChatUI;
+
+        // UI Variable
+        private javax.swing.JPanel background;
+        private javax.swing.JButton btnLogin;
+        private javax.swing.JLabel tTitle;
+        private javax.swing.JLabel tError;
+        private javax.swing.JLabel tUsername;
+        private javax.swing.JLabel tPort;
+        private javax.swing.JLabel tAddress;
+        private javax.swing.JPanel jPanel1;
+        private javax.swing.JPanel jPanel2;
+        private javax.swing.JTextField iUsername;
+        private javax.swing.JTextField iPort;
+        private javax.swing.JTextField iAddress;
+        // End of variables declaration//GEN-END:variables
+
         public loginUI() {
                 initComponents();
         }
@@ -287,21 +305,4 @@ public class loginUI extends javax.swing.JFrame {
                 this.setVisible(false);
         }
 
-        // Variable
-        private menuUI ChatUI;
-
-        // UI Variable
-        private javax.swing.JPanel background;
-        private javax.swing.JButton btnLogin;
-        private javax.swing.JLabel tTitle;
-        private javax.swing.JLabel tError;
-        private javax.swing.JLabel tUsername;
-        private javax.swing.JLabel tPort;
-        private javax.swing.JLabel tAddress;
-        private javax.swing.JPanel jPanel1;
-        private javax.swing.JPanel jPanel2;
-        private javax.swing.JTextField iUsername;
-        private javax.swing.JTextField iPort;
-        private javax.swing.JTextField iAddress;
-        // End of variables declaration//GEN-END:variables
 }

@@ -116,23 +116,19 @@ public class menuUI extends javax.swing.JFrame implements ActionListener {
                         }
                 });
                 scrollOnline.setViewportView(lOnline);
+                // listen when select on online list
                 lOnline.addListSelectionListener(new ListSelectionListener() {
                         public void valueChanged(ListSelectionEvent evt) {
                                 JList source = (JList) evt.getSource();
+                                // not run twice
                                 if (!evt.getValueIsAdjusting()) {
                                         // do something
                                         try {
                                                 getValuedOnline(evt, source);
-                                        } catch (UnknownHostException e) {
-                                                // TODO Auto-generated catch block
-                                                e.printStackTrace();
-                                        } catch (ClassNotFoundException e) {
-                                                // TODO Auto-generated catch block
-                                                e.printStackTrace();
-                                        } catch (IOException e) {
-                                                // TODO Auto-generated catch block
+                                        } catch (ClassNotFoundException | IOException e) {
                                                 e.printStackTrace();
                                         }
+
                                 }
                                 return;
                         }
@@ -212,6 +208,7 @@ public class menuUI extends javax.swing.JFrame implements ActionListener {
                 tFriends.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
                 tFriends.setText("FRIENDS");
 
+                // init model
                 lFriends.setModel(new javax.swing.AbstractListModel<String>() {
                         String[] strings = {};
 
@@ -225,12 +222,18 @@ public class menuUI extends javax.swing.JFrame implements ActionListener {
 
                 });
                 scrollFriends.setViewportView(lFriends);
+                // listen on select friend list
                 lFriends.addListSelectionListener(new ListSelectionListener() {
                         public void valueChanged(ListSelectionEvent evt) {
                                 JList source = (JList) evt.getSource();
+                                // not run twice
                                 if (!evt.getValueIsAdjusting()) {
                                         // do something
-                                        getValueFriend(evt, source);
+                                        try {
+                                                getValueFriend(evt, source);
+                                        } catch (ClassNotFoundException | IOException e) {
+                                                e.printStackTrace();
+                                        }
 
                                 }
                                 return;
@@ -340,10 +343,12 @@ public class menuUI extends javax.swing.JFrame implements ActionListener {
                 });
         }
 
+        // show friend_request UI
         public static void FriendRequest(String requestName) {
                 requestUI = new friend_requestUI(requestName);
         }
 
+        // call server to get newest online user and refresh on UI
         private void btnlRefreshActionPerformed(ActionEvent evt) {
                 System.out.println("Refresh");
 
@@ -362,11 +367,18 @@ public class menuUI extends javax.swing.JFrame implements ActionListener {
                 System.out.println("logged out!");
         }
 
-        public void getValueFriend(ListSelectionEvent evt, JList source) {
+        // Click on Friend Name
+        public void getValueFriend(ListSelectionEvent evt, JList source)
+                        throws UnknownHostException, ClassNotFoundException, IOException {
                 // connect to chat
-                System.out.println((String) lFriends.getSelectedValue());
+                String friendSelect = (String) source.getSelectedValue();
+                System.out.println(friendSelect);
+
+                peer requestPeer = chatHandle.FindPeer(friendSelect);
+                chatHandle.SendChatRequest(requestPeer);
         }
 
+        // Click on Online name
         public void getValuedOnline(ListSelectionEvent evt, JList source)
                         throws UnknownHostException, IOException, ClassNotFoundException {
                 String peerSelect = (String) source.getSelectedValue();
@@ -378,10 +390,10 @@ public class menuUI extends javax.swing.JFrame implements ActionListener {
                         // send friend request
                 }
                 peer requestPeer = chatHandle.FindPeer(peerSelect);
-                chatHandle.ConnectToPeer(requestPeer);
-
+                chatHandle.SendFriendRequest(requestPeer);
         }
 
+        // Show a yes no dialog
         public static int showDialog(String msg, boolean type) {
                 JFrame frameMessage = new JFrame();
                 if (type)
@@ -394,6 +406,7 @@ public class menuUI extends javax.swing.JFrame implements ActionListener {
 
         }
 
+        // update new friend to ui
         public static void addNewFriend(String[] FriendList) {
                 lFriends.setModel(itemInlFriends);
                 itemInlFriends.clear();
@@ -403,6 +416,7 @@ public class menuUI extends javax.swing.JFrame implements ActionListener {
                 return;
         }
 
+        // update new online list
         public void UpdateOnlineListUI(String[] friendList) {
                 lOnline.setModel(itemInlOnline);
                 itemInlOnline.clear();

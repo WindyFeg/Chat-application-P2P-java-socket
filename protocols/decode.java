@@ -20,16 +20,13 @@ import protocols.*;
 public class decode {
 
     public static String requestType(String code) {
-        Document document = convertStringToXML(code);
-        String requestType = document.getElementsByTagName("FRIEND_REQUEST").item(0).getTextContent();
-        if (requestType != null) {
+        if (code.charAt(1) == 'F') {
             return tag.FRIEND_REQUEST;
         }
-        requestType = document.getElementsByTagName("CHAT_REQUEST").item(0).getTextContent();
-        if (requestType != null) {
+        if (code.charAt(1) == 'C') {
             return tag.CHAT_REQUEST;
         }
-        return "";
+        return null;
     }
 
     public static peer getPeerInfo(String code) {
