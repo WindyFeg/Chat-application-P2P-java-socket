@@ -15,6 +15,10 @@ public class encode {
         return tag.FRIEND_REQUEST_HEAD + peer.getName() + tag.FRIEND_REQUEST_TAIL;
     }
 
+    public static String File(String file) {
+        return tag.FILE_HEAD + file + tag.FILE_TAIL;
+    }
+
     public static String ChatRequest(peer peer) {
         return tag.CHAT_REQUEST_HEAD + peer.getName() + tag.CHAT_REQUEST_TAIL;
     }

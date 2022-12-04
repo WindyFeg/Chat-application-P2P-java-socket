@@ -12,6 +12,9 @@ public class tag {
     public static String DENY = "DENY";
     public static String ACCEPT = "ACCEPT";
 
+    public static String FILE_HEAD = "FILE_HEAD";
+    public static String FILE_TAIL = "FILE_TAIL";
+
     public static String FRIEND_REQUEST_HEAD = "<FRIEND_REQUEST>";
     public static String FRIEND_REQUEST_TAIL = "</FRIEND_REQUEST>";
     public static String CHAT_REQUEST_HEAD = "<CHAT_REQUEST>";
