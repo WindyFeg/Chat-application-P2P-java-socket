@@ -40,7 +40,7 @@ public class menu {
         }
     }
 
-    public String[] getList(ArrayList<peer> List) {
+    public static String[] getList(ArrayList<peer> List) {
         String res = "";
         if (List.size() == 0) {
             return null;
@@ -92,8 +92,6 @@ public class menu {
     public static void ConnectToPeer(peer peerServer) throws UnknownHostException, IOException, ClassNotFoundException {
         Socket peerServerSocket = new Socket(peerServer.getHost(), peerServer.getPort());
 
-        // ObjectInputStream serverPeerIn = new
-        // ObjectInputStream(peerServerSocket.getInputStream());
         ObjectOutputStream serverPeerOut = new ObjectOutputStream(peerServerSocket.getOutputStream());
 
         serverPeerOut.writeObject(encode.FriendRequest(getMyPeer()));
@@ -105,7 +103,9 @@ public class menu {
             peerServerSocket.close();
             return;
         } else {
-            // Show chat
+            // add friend
+            AddFriend(peerServer.getName());
+            menuUI.addNewFriend(getList(friendList));
         }
 
     }
@@ -164,52 +164,60 @@ public class menu {
         }
     }
 
+    public static void AddFriend(String requestName) {
+        if (friendList == null) {
+            friendList = new ArrayList<>();
+        }
+        friendList.add(FindPeer(requestName));
+        return;
+    }
+
     public void ListenPeer(int port) throws IOException, ClassNotFoundException {
 
         System.out.println("listenning on " + port);
         peerServer = new ServerSocket(port);
+        while (true) {
+            Socket otherPeer = peerServer.accept();
 
-        Socket otherPeer = peerServer.accept();
+            ObjectInputStream otherPeerIn = new ObjectInputStream(otherPeer.getInputStream());
+            ObjectOutputStream otherPeerOut = new ObjectOutputStream(otherPeer.getOutputStream());
 
-        ObjectInputStream otherPeerIn = new ObjectInputStream(otherPeer.getInputStream());
-        ObjectOutputStream otherPeerOut = new ObjectOutputStream(otherPeer.getOutputStream());
+            // waiting for who want to chat with us
+            String request = (String) otherPeerIn.readObject();
 
-        // waiting for who want to chat with us
-        String request = (String) otherPeerIn.readObject();
+            String requestType = decode.requestType(request);
 
-        String requestType = decode.requestType(request);
+            if (requestType.equals(tag.FRIEND_REQUEST)) {
+                // Friend request
+                String requestName = decode.peerRequest(request, tag.FRIEND_REQUEST);
+                System.out.println(requestName);
 
-        if (requestType.equals(tag.FRIEND_REQUEST)) {
-            // Friend request
-            String requestName = decode.peerRequest(request, tag.FRIEND_REQUEST);
-            System.out.println(requestName);
+                // Show requestUI
+                int respone = menuUI.showDialog(requestName + " send a friend request!", true);
+                // Deny
+                if (respone == -1) {
+                    otherPeerOut.writeObject(tag.DENY);
+                    otherPeer.close();
+                }
+                // Accept & add to Friend list
+                otherPeerOut.writeObject(tag.ACCEPT);
+                AddFriend(requestName);
+                menuUI.addNewFriend(getList(friendList));
 
-            // Show requestUI
-            int respone = menuUI.showDialog(requestName + " send a friend request!", true);
-            // Deny
-            if (respone == -1) {
-                otherPeerOut.writeObject(tag.DENY);
-                otherPeer.close();
+            } else {
+                // Chat request
+                String requestName = decode.peerRequest(request, tag.CHAT_REQUEST);
+                System.out.println(requestName);
+                // Show requestUI
+                int respone = menuUI.showDialog(requestName + " want to chat with you", true);
+                // Deny
+                if (respone == -1) {
+                    otherPeerOut.writeObject(tag.DENY);
+                    otherPeer.close();
+                }
+                // Start to chat
+                chatUI newChatUI = new chatUI(otherPeer, username, requestName);
             }
-            // Accept & add to Friend list
-            peer connectPeer = FindPeer(requestName);
-            // why thread die?
-            friendList = onlineList;
-            menuUI.addNewFriend(getList(friendList));
-
-        } else {
-            // Chat request
-            String requestName = decode.peerRequest(request, tag.CHAT_REQUEST);
-            System.out.println(requestName);
-            // Show requestUI
-            int respone = menuUI.showDialog(requestName + " want to chat with you", true);
-            // Deny
-            if (respone == -1) {
-                otherPeerOut.writeObject(tag.DENY);
-                otherPeer.close();
-            }
-            //
-            chatUI newChatUI = new chatUI(otherPeer, username, requestName);
         }
 
     }

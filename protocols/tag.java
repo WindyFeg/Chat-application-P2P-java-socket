@@ -10,6 +10,7 @@ public class tag {
     public static String FRIEND_REQUEST = "FRIEND_REQUEST";
     public static String CHAT_REQUEST = "CHAT_REQUEST";
     public static String DENY = "DENY";
+    public static String ACCEPT = "ACCEPT";
 
     public static String FRIEND_REQUEST_HEAD = "<FRIEND_REQUEST>";
     public static String FRIEND_REQUEST_TAIL = "</FRIEND_REQUEST>";
