@@ -16,7 +16,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import chat.*;
-import oracle.jrockit.jfr.ActiveRecordingEvent;
 import protocols.files;
 
 /**
@@ -29,10 +28,11 @@ public class chatUI extends JFrame
     private static Container container;
     private JButton btnExit;
     private JButton btnSend;
-    private JButton btnchangeFileToBinary;
+    private JButton btnSendFile;
     private JButton btnFile;
     private JTextField iMessage;
     private static JTextArea aMessage;
+    private static JScrollPane sMessage;
     private static JTextArea fileLink;
     private static chat chatHandler;
     private static String oldMsg;
@@ -40,8 +40,8 @@ public class chatUI extends JFrame
     private static String pathSend;
     private static File fileSend;
     private boolean ischangeFileToBinary = false;
-    private static int fieldId = 0;
-    private static ArrayList<files> myFiles = new ArrayList<>();
+    public static int fieldId = 0;
+    public static ArrayList<files> myFiles = new ArrayList<>();
 
     private JScrollPane scroll;
 
@@ -82,12 +82,12 @@ public class chatUI extends JFrame
         btnFile.addActionListener(this);
         container.add(btnFile);
 
-        btnchangeFileToBinary = new JButton("Send file");
-        btnchangeFileToBinary.setFont(new Font("Arial", Font.PLAIN, 12));
-        btnchangeFileToBinary.setSize(75, 50);
-        btnchangeFileToBinary.setLocation(500, 450);
-        btnchangeFileToBinary.addActionListener(this);
-        container.add(btnchangeFileToBinary);
+        btnSendFile = new JButton("Send file");
+        btnSendFile.setFont(new Font("Arial", Font.PLAIN, 12));
+        btnSendFile.setSize(75, 50);
+        btnSendFile.setLocation(500, 450);
+        btnSendFile.addActionListener(this);
+        container.add(btnSendFile);
 
         btnExit = new JButton("Exit");
         btnExit.setFont(new Font("Arial", Font.PLAIN, 15));
@@ -103,12 +103,15 @@ public class chatUI extends JFrame
         iMessage.setLocation(25, 450);
         container.add(iMessage);
 
+        // File panel
         aFile = new JPanel();
         aFile.setLayout(new BoxLayout(aFile, BoxLayout.Y_AXIS));
         JScrollPane aFileScroll = new JScrollPane(aFile);
-        aFileScroll.setVerticalScrollBarPolicy(aFileScroll.VERTICAL_SCROLLBAR_ALWAYS);
+        aFileScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         aFileScroll.setSize(150, 300);
         aFileScroll.setLocation(425, 75);
+        // aFile.setSize(150, 300);
+        // aFile.setLocation(425, 75);
         container.add(aFileScroll);
 
         // link
@@ -122,12 +125,16 @@ public class chatUI extends JFrame
 
         aMessage = new JTextArea();
         aMessage.setEditable(false);
-        JScrollPane sMessage = new JScrollPane(aFile);
-        sMessage.setVerticalScrollBarPolicy(sMessage.VERTICAL_SCROLLBAR_ALWAYS);
-        sMessage.setFont(new Font("Arial", Font.PLAIN, 15));
-        sMessage.setSize(375, 350);
-        sMessage.setLocation(25, 75);
-        container.add(sMessage);
+        // sMessage = new JScrollPane(aFile);
+        // sMessage.setVerticalScrollBarPolicy(sMessage.VERTICAL_SCROLLBAR_ALWAYS);
+        // sMessage.setFont(new Font("Arial", Font.PLAIN, 15));
+        // sMessage.setSize(375, 350);
+        // sMessage.setLocation(25, 75);
+        aMessage.setFont(new Font("Arial", Font.PLAIN, 15));
+        aMessage.setSize(375, 350);
+        aMessage.setLocation(25, 75);
+        // container.add(sMessage);
+        container.add(aMessage);
 
         // show the thing
         setVisible(true);
@@ -210,16 +217,16 @@ public class chatUI extends JFrame
         aMessage.setText(oldMsg + msg);
     }
 
-    public static MouseListener getMyMouseListener(){
-        return new MouseListener(){
+    public static MouseListener getMyMouseListener() {
+        return new MouseListener() {
 
             @Override
             public void mouseClicked(MouseEvent e) {
                 JPanel panel = (JPanel) e.getSource();
                 int fieldid = Integer.parseInt(panel.getName());
 
-                for(files file: myFiles){
-                    if(file.getId() == fieldid){
+                for (files file : myFiles) {
+                    if (file.getId() == fieldid) {
                         JFrame previewFile = createFame(file.getName(), file.getData(), file.getFileEx());
                         previewFile.setVisible(true);
                     }
@@ -227,30 +234,22 @@ public class chatUI extends JFrame
             }
 
             @Override
-            public void mouseEntered(MouseEvent e) {
-                // TODO Auto-generated method stub
-                
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                // TODO Auto-generated method stub
-                
-            }
-
-            @Override
             public void mousePressed(MouseEvent e) {
-                // TODO Auto-generated method stub
-                
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                // TODO Auto-generated method stub
-                
             }
-            
-        }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+
+        };
     }
 
     // return type of file
@@ -264,33 +263,34 @@ public class chatUI extends JFrame
     }
 
     // add new file to file UI
-    public static void addFile(String namefile) {
+    public static void addFile(String namefile, byte[] fileContentByte) {
         // the row
         JPanel fileRow = new JPanel();
         fileRow.setLayout(new BoxLayout(fileRow, BoxLayout.Y_AXIS));
-
         // the of row
         JLabel fileNameRow = new JLabel();
-        fileNameRow.setFont(new Font("Arial", Font.BOLD, 16));
+        fileNameRow.setFont(new Font("Arial", Font.BOLD, 25));
         fileNameRow.setBorder(new EmptyBorder(10, 0, 10, 0));
+        fileNameRow.setText(namefile);
 
+        // the of row
         // check file tail
         if (getFileExtension(namefile).equalsIgnoreCase("txt")) {
             // set name as ID for mouse listener
-            fileNameRow.setName(String.valueOf(fieldId));
-            fileNameRow.addMouseListener(getMyMouseListener());
+            fileRow.setName(String.valueOf(fieldId));
+            fileRow.addMouseListener(getMyMouseListener());
             // add damn thing to File listUI
-            aFile.add(fileNameRow);
-            container.add(fileRow);
+            fileRow.add(fileNameRow);
+            aFile.add(fileRow);
         } else {
-            fileNameRow.setName(String.valueOf(fieldId));
-            fileNameRow.addMouseListener(getMyMouseListener());
+            fileRow.setName(String.valueOf(fieldId));
+            fileRow.addMouseListener(getMyMouseListener());
 
-            aFile.add(fileNameRow);
-            container.add(fileRow);
+            fileRow.add(fileNameRow);
+            aFile.add(fileRow);
         }
-        // 46:55
-        myFiles.add(new files(fieldId, namefile, namefile, null))
+        myFiles.add(new files(fieldId, namefile, getFileExtension(namefile), fileContentByte));
+        updateMsg("Your friend just send you a file!");
     }
 
     // send the damn name file
@@ -346,7 +346,7 @@ public class chatUI extends JFrame
             }
 
         }
-        if (e.getSource() == btnchangeFileToBinary) {
+        if (e.getSource() == btnSendFile) {
             // click on send file
             try {
                 changeFileToBinary();

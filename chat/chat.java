@@ -21,7 +21,7 @@ public class chat {
     private String peername;
     public ObjectInputStream peerIn;
     public ObjectOutputStream peerOut;
-    public FileOutputStream peerFileOut;
+    public DataOutputStream peerFileOut;
     public DataInputStream peerFileIn;
 
     chat(Socket socketChat, String username, String peername, ObjectInputStream in, ObjectOutputStream out)
@@ -44,25 +44,22 @@ public class chat {
 
             }
         });
-        listenThread.start();
+        // listenThread.start();
         // ------------------------------------------------------------------------
-        // Port 8888 for send file only
-        ServerSocket serverSocket = new ServerSocket(8888);
         Thread fileListenThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                listenOnFile(serverSocket);
+                listenOnFile(socketChat);
             }
         });
         fileListenThread.start();
     }
 
     // listen on file
-    public void listenOnFile(ServerSocket serverSocket) {
+    public void listenOnFile(Socket serverSocket) {
         while (true) {
             try {
-                Socket socketFile = serverSocket.accept();
-                peerFileIn = new DataInputStream(socketFile.getInputStream());
+                peerFileIn = new DataInputStream(serverSocket.getInputStream());
                 // reading
                 int fileNamelength = peerFileIn.readInt();
 
@@ -83,8 +80,7 @@ public class chat {
                         peerFileIn.readFully(fileContentByte, 0, fileContentByte.length);
 
                         // add new row to file UI
-                        chatUI.addFile(filename);
-
+                        chatUI.addFile(filename, fileContentByte);
                     }
                 }
 
@@ -132,9 +128,9 @@ public class chat {
 
     public void DownloadFile(String fileName, byte[] fileData) throws IOException {
         File fileDownload = new File(fileName);
-        peerFileOut = new FileOutputStream(fileDownload);
+        FileOutputStream peerFileOut2 = new FileOutputStream(fileDownload);
 
-        peerFileOut.write(fileData);
-        peerFileOut.close();
+        peerFileOut2.write(fileData);
+        peerFileOut2.close();
     }
 }

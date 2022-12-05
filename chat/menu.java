@@ -212,7 +212,7 @@ public class menu {
 
         System.out.println("listenning on " + port);
         peerServer = new ServerSocket(port);
-        while (true) {
+            while (true) {
             Socket otherPeer = peerServer.accept();
 
             ObjectInputStream otherPeerIn = new ObjectInputStream(otherPeer.getInputStream());
