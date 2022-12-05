@@ -17,6 +17,7 @@ import protocols.files;
 
 public class chat {
     private Socket socketChat;
+    private Socket socketFile;
     private String username;
     private String peername;
     public ObjectInputStream peerIn;
@@ -24,9 +25,11 @@ public class chat {
     public DataOutputStream peerFileOut;
     public DataInputStream peerFileIn;
 
-    chat(Socket socketChat, String username, String peername, ObjectInputStream in, ObjectOutputStream out)
+    chat(Socket socketChat, Socket socketFile, String username, String peername, ObjectInputStream in,
+            ObjectOutputStream out)
             throws IOException {
         this.socketChat = socketChat;
+        this.socketFile = socketFile;
         this.username = username;
         this.peername = peername;
         peerOut = out;
@@ -44,12 +47,12 @@ public class chat {
 
             }
         });
-        // listenThread.start();
+        listenThread.start();
         // ------------------------------------------------------------------------
         Thread fileListenThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                listenOnFile(socketChat);
+                listenOnFile(socketFile);
             }
         });
         fileListenThread.start();
@@ -91,7 +94,7 @@ public class chat {
 
     // send out file
     public void sendfile(byte[] fileName_byte, byte[] fileContent_byte) throws IOException {
-        peerFileOut = new DataOutputStream(socketChat.getOutputStream());
+        peerFileOut = new DataOutputStream(socketFile.getOutputStream());
         // (length of file + file)
         // send name file
         peerFileOut.writeInt(fileName_byte.length);

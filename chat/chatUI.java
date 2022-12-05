@@ -45,9 +45,10 @@ public class chatUI extends JFrame
 
     private JScrollPane scroll;
 
-    chatUI(Socket socketChat, String username, String peername, ObjectInputStream in, ObjectOutputStream out)
+    chatUI(Socket socketChat, Socket socketFile, String username, String peername, ObjectInputStream in,
+            ObjectOutputStream out)
             throws IOException {
-        chatHandler = new chat(socketChat, username, peername, in, out);
+        chatHandler = new chat(socketChat, socketFile, username, peername, in, out);
         initComponents(peername);
     }
 
@@ -154,7 +155,7 @@ public class chatUI extends JFrame
 
         JLabel prompt = new JLabel("Do you want to download " + fileName + " ?");
         prompt.setAlignmentX(Component.CENTER_ALIGNMENT);
-        prompt.setFont(new Font("Arial", Font.PLAIN, 20));
+        prompt.setFont(new Font("Arial", Font.PLAIN, 12));
         prompt.setBorder(new EmptyBorder(20, 0, 10, 0));
 
         JButton btnYes = new JButton("Yes");
@@ -170,7 +171,8 @@ public class chatUI extends JFrame
 
         JPanel button = new JPanel();
         button.setBorder(new EmptyBorder(20, 0, 10, 0));
-        button.add(btnYes, btnNo);
+        button.add(btnYes);
+        button.add(btnNo);
 
         if (fileExtension.equalsIgnoreCase("txt")) {
             fileContent.setText("<html>" + new String(fileData) + "</html>");
@@ -269,7 +271,7 @@ public class chatUI extends JFrame
         fileRow.setLayout(new BoxLayout(fileRow, BoxLayout.Y_AXIS));
         // the of row
         JLabel fileNameRow = new JLabel();
-        fileNameRow.setFont(new Font("Arial", Font.BOLD, 25));
+        fileNameRow.setFont(new Font("Arial", Font.BOLD, 12));
         fileNameRow.setBorder(new EmptyBorder(10, 0, 10, 0));
         fileNameRow.setText(namefile);
 
@@ -361,7 +363,6 @@ public class chatUI extends JFrame
     }
 
     public static void main(String[] args) throws IOException {
-        chatUI a = new chatUI(null, oldMsg, oldMsg, null, null);
     }
 
 }

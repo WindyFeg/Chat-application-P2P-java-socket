@@ -15,7 +15,8 @@ import protocols.decode;
 public class menu {
     // My variable
     private Socket server;
-    private ServerSocket peerServer;
+    private ServerSocket peerServerChat;
+    private ServerSocket peerServerFile;
     private static String username;
     private ObjectOutputStream serverOut;
     private ObjectInputStream serverIn;
@@ -105,9 +106,10 @@ public class menu {
     }
 
     // send friend request and wait for answer
-    public static void SendFriendRequest(peer peerServer)
+    public static void SendFriendRequest(peer peerServerChat)
             throws UnknownHostException, IOException, ClassNotFoundException {
-        Socket peerServerSocket = new Socket(peerServer.getHost(), peerServer.getPort());
+        Socket peerServerSocket = new Socket(peerServerChat.getHost(), peerServerChat.getPort());
+        Socket peerServerSocketFile = new Socket(peerServerChat.getHost(), peerServerChat.getPort() + 1);
 
         ObjectOutputStream serverPeerOut = new ObjectOutputStream(peerServerSocket.getOutputStream());
 
@@ -121,7 +123,7 @@ public class menu {
             return;
         } else {
             // add friend
-            AddFriend(peerServer.getName());
+            AddFriend(peerServerChat.getName());
             menuUI.addNewFriend(getList(friendList));
         }
         serverPeerOut.close();
@@ -129,9 +131,10 @@ public class menu {
         peerServerSocket.close();
     }
 
-    public static void SendChatRequest(peer peerServer)
+    public static void SendChatRequest(peer peerServerChat)
             throws UnknownHostException, IOException, ClassNotFoundException {
-        Socket peerServerSocket = new Socket(peerServer.getHost(), peerServer.getPort());
+        Socket peerServerSocket = new Socket(peerServerChat.getHost(), peerServerChat.getPort());
+        Socket peerServerSocketFile = new Socket(peerServerChat.getHost(), peerServerChat.getPort() + 1);
         ObjectOutputStream serverPeerOut = new ObjectOutputStream(peerServerSocket.getOutputStream());
 
         serverPeerOut.writeObject(encode.ChatRequest(getMyPeer()));
@@ -144,11 +147,9 @@ public class menu {
             return;
         } else {
             // establish chat
-            chatUI chat = new chatUI(peerServerSocket, username, peerServer.getName(), serverPeerIn, serverPeerOut);
+            chatUI chat = new chatUI(peerServerSocket, peerServerSocketFile, username, peerServerChat.getName(),
+                    serverPeerIn, serverPeerOut);
         }
-        // serverPeerOut.close();
-        // serverPeerIn.close();
-        // peerServerSocket.close();
     }
 
     // initial tell server to get online list
@@ -211,9 +212,11 @@ public class menu {
     public void ListenPeer(int port) throws IOException, ClassNotFoundException {
 
         System.out.println("listenning on " + port);
-        peerServer = new ServerSocket(port);
-            while (true) {
-            Socket otherPeer = peerServer.accept();
+        peerServerChat = new ServerSocket(port);
+        peerServerFile = new ServerSocket(port + 1);
+        while (true) {
+            Socket otherPeer = peerServerChat.accept();
+            Socket otherPeerFile = peerServerFile.accept();
 
             ObjectInputStream otherPeerIn = new ObjectInputStream(otherPeer.getInputStream());
             ObjectOutputStream otherPeerOut = new ObjectOutputStream(otherPeer.getOutputStream());
@@ -256,7 +259,7 @@ public class menu {
                 }
                 // Start to chat
                 otherPeerOut.writeObject(tag.ACCEPT);
-                chatUI Chat = new chatUI(otherPeer, username, requestName, otherPeerIn, otherPeerOut);
+                chatUI Chat = new chatUI(otherPeer, otherPeerFile, username, requestName, otherPeerIn, otherPeerOut);
             }
 
         }
