@@ -24,7 +24,6 @@ import javax.swing.event.ListSelectionListener;
  */
 public class menuUI extends javax.swing.JFrame implements ActionListener {
 
-        // private javax.swing.JButton btnAdd;
         private javax.swing.JPanel background;
         private javax.swing.JPanel friendPanel;
         private javax.swing.JPanel functionBox;
@@ -33,20 +32,15 @@ public class menuUI extends javax.swing.JFrame implements ActionListener {
         private javax.swing.JLabel tOnline;
         private javax.swing.JLabel tFriends;
         private javax.swing.JLabel tUsernname;
-        private static javax.swing.JList<String> lFriends;
         private javax.swing.JList<String> lOnline;
-        // private javax.swing.JPanel jPanel1;
-        // private javax.swing.JPanel jPanel2;
         private javax.swing.JScrollPane scrollFriends;
         private javax.swing.JScrollPane scrollOnline;
-        // private javax.swing.JScrollPane jScrollPane3;
-        // private javax.swing.JTextArea jTextArea1;
-        // private javax.swing.JTextField jTextField1;
         private javax.swing.JPanel messagePanel;
         private javax.swing.JPanel onlinePanel;
-        // private javax.swing.JButton btnSend;
         private DefaultListModel itemInlOnline;
         private static DefaultListModel itemInlFriends;
+        private static javax.swing.JList<String> lFriends;
+
         // myVariable
         public menu chatHandle;
         public static friend_requestUI requestUI;
@@ -62,17 +56,11 @@ public class menuUI extends javax.swing.JFrame implements ActionListener {
 
         @SuppressWarnings("unchecked")
 
+        // this part i use netbeans so code a bit messy
         private void initComponents(String username) {
 
                 background = new javax.swing.JPanel();
                 messagePanel = new javax.swing.JPanel();
-                // jScrollPane3 = new javax.swing.JScrollPane();
-                // jTextArea1 = new javax.swing.JTextArea();
-                // jPanel2 = new javax.swing.JPanel();
-                // jTextField1 = new javax.swing.JTextField();
-                // btnSend = new javax.swing.JButton();
-                // btnAdd = new javax.swing.JButton();
-                // jPanel1 = new javax.swing.JPanel();
                 tUsernname = new javax.swing.JLabel();
                 onlinePanel = new javax.swing.JPanel();
                 tOnline = new javax.swing.JLabel();
@@ -91,11 +79,6 @@ public class menuUI extends javax.swing.JFrame implements ActionListener {
                 setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
                 background.setBackground(new java.awt.Color(204, 204, 204));
-
-                // jTextArea1.setColumns(20);
-                // jTextArea1.setRows(5);
-                // jScrollPane3.setViewportView(jTextArea1);
-
                 // JPanel2
 
                 // Online
@@ -169,7 +152,11 @@ public class menuUI extends javax.swing.JFrame implements ActionListener {
                 btnlogout.setText("Logout");
                 btnlogout.addActionListener(new java.awt.event.ActionListener() {
                         public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                btnlogoutActionPerformed(evt);
+                                try {
+                                        btnlogoutActionPerformed(evt);
+                                } catch (IOException e) {
+                                        e.printStackTrace();
+                                }
                         }
                 });
 
@@ -362,8 +349,10 @@ public class menuUI extends javax.swing.JFrame implements ActionListener {
                 }
         }
 
-        private void btnlogoutActionPerformed(ActionEvent evt) {
+        // Close UI
+        private void btnlogoutActionPerformed(ActionEvent evt) throws IOException {
                 chatHandle.logout();
+                this.dispose();
                 System.out.println("logged out!");
         }
 
@@ -427,8 +416,7 @@ public class menuUI extends javax.swing.JFrame implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-                if (e.getSource() == lFriends) {
-                        System.out.println("click");
-                }
+
         }
+
 }

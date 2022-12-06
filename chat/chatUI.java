@@ -2,21 +2,17 @@ package chat;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.*;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
-
-import chat.*;
 import protocols.files;
+import protocols.tag;
 
 /**
  * menuUI
@@ -24,26 +20,23 @@ import protocols.files;
 public class chatUI extends JFrame
         implements ActionListener {
     private JLabel Username;
-    private static JPanel aFile;
-    private static Container container;
     private JButton btnExit;
     private JButton btnSend;
     private JButton btnSendFile;
     private JButton btnFile;
     private JTextField iMessage;
+    private static JPanel aFile;
     private static JTextArea aMessage;
     private static JScrollPane sMessage;
+    private static Container container;
     private static JTextArea fileLink;
     private static chat chatHandler;
     private static String oldMsg;
     private static String fileName;
     private static String pathSend;
     private static File fileSend;
-    private boolean ischangeFileToBinary = false;
     public static int fieldId = 0;
     public static ArrayList<files> myFiles = new ArrayList<>();
-
-    private JScrollPane scroll;
 
     chatUI(Socket socketChat, Socket socketFile, String username, String peername, ObjectInputStream in,
             ObjectOutputStream out)
@@ -60,7 +53,7 @@ public class chatUI extends JFrame
 
         container = getContentPane();
         container.setLayout(null);
-        container.setBackground(new java.awt.Color(204, 204, 204));
+        container.setBackground(new java.awt.Color(204, 255, 255));
 
         // Name request
         Username = new JLabel("Chat with " + peerName);
@@ -92,7 +85,7 @@ public class chatUI extends JFrame
 
         btnExit = new JButton("Exit");
         btnExit.setFont(new Font("Arial", Font.PLAIN, 15));
-        btnExit.setSize(50, 25);
+        btnExit.setSize(100, 40);
         btnExit.setLocation(325, 25);
         btnExit.addActionListener(this);
         container.add(btnExit);
@@ -111,8 +104,6 @@ public class chatUI extends JFrame
         aFileScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         aFileScroll.setSize(150, 300);
         aFileScroll.setLocation(425, 75);
-        // aFile.setSize(150, 300);
-        // aFile.setLocation(425, 75);
         container.add(aFileScroll);
 
         // link
@@ -126,24 +117,19 @@ public class chatUI extends JFrame
 
         aMessage = new JTextArea();
         aMessage.setEditable(false);
-        // sMessage = new JScrollPane(aFile);
-        // sMessage.setVerticalScrollBarPolicy(sMessage.VERTICAL_SCROLLBAR_ALWAYS);
-        // sMessage.setFont(new Font("Arial", Font.PLAIN, 15));
-        // sMessage.setSize(375, 350);
-        // sMessage.setLocation(25, 75);
         aMessage.setFont(new Font("Arial", Font.PLAIN, 15));
         aMessage.setSize(375, 350);
         aMessage.setLocation(25, 75);
-        // container.add(sMessage);
         container.add(aMessage);
 
         // show the thing
         setVisible(true);
     }
 
-    public static JFrame createFame(String fileName, byte[] fileData, String fileExtension) {
+    // Download manager
+    public static JFrame createFrame(String fileName, byte[] fileData, String fileExtension) {
         JFrame frame = new JFrame("File Downloader");
-        frame.setSize(400, 400);
+        frame.setSize(400, 250);
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -214,11 +200,13 @@ public class chatUI extends JFrame
         return frame;
     }
 
+    // update message
     public static void updateMsg(String msg) {
         oldMsg = aMessage.getText();
         aMessage.setText(oldMsg + msg);
     }
 
+    // listen on file
     public static MouseListener getMyMouseListener() {
         return new MouseListener() {
 
@@ -229,7 +217,7 @@ public class chatUI extends JFrame
 
                 for (files file : myFiles) {
                     if (file.getId() == fieldid) {
-                        JFrame previewFile = createFame(file.getName(), file.getData(), file.getFileEx());
+                        JFrame previewFile = createFrame(file.getName(), file.getData(), file.getFileEx());
                         previewFile.setVisible(true);
                     }
                 }
@@ -334,8 +322,6 @@ public class chatUI extends JFrame
             // Show UI to pick file Yes - 0/ No - 1
             int result = fileChooser.showOpenDialog(null);
             if (result == JFileChooser.APPROVE_OPTION) {
-                ischangeFileToBinary = true;
-
                 // the path
                 pathSend = (fileChooser.getSelectedFile().getAbsolutePath());
                 fileSend = new File(pathSend);
@@ -358,7 +344,12 @@ public class chatUI extends JFrame
         }
 
         if (e.getSource() == btnExit) {
-
+            try {
+                chatHandler.Exit();
+                this.dispose();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
         }
     }
 

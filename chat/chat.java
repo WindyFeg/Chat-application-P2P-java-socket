@@ -3,17 +3,13 @@ package chat;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 
-import protocols.files;
+import protocols.tag;
 
 public class chat {
     private Socket socketChat;
@@ -56,6 +52,11 @@ public class chat {
             }
         });
         fileListenThread.start();
+    }
+
+    // Exit
+    public void Exit() throws IOException {
+        peerOut.writeObject(tag.EXIT);
     }
 
     // listen on file
@@ -111,10 +112,10 @@ public class chat {
             String text = (String) peerIn.readObject();
             chatUI.updateMsg(peername + ": " + text + "\n");
 
-            if (text == null) {
-                peerOut.close();
-                socketChat.close();
-                System.out.println("Peer disconnect");
+            if (text.equals(tag.EXIT)) {
+                chatUI.updateMsg("\nSYSTEM:\n YOUR FRIEND DIS-CONNECTED, YOU SHOULD EXIT AND TRY AGAIN!");
+                Exit();
+                return;
             }
         }
     }

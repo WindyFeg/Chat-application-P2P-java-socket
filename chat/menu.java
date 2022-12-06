@@ -1,7 +1,6 @@
 package chat;
 
 import java.io.*;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -14,14 +13,14 @@ import protocols.decode;
 
 public class menu {
     // My variable
+    private peer myPeer;
     private Socket server;
     private ServerSocket peerServerChat;
     private ServerSocket peerServerFile;
-    private static String username;
     private ObjectOutputStream serverOut;
     private ObjectInputStream serverIn;
-    private peer myPeer;
     private boolean isConnect;
+    private static String username;
     public static ArrayList<peer> onlineList;
     public static ArrayList<peer> friendList;
 
@@ -56,8 +55,15 @@ public class menu {
         return res.split("/");
     }
 
-    public void logout() {
+    // tell server to logout and close UI
+    public void logout() throws IOException {
+        serverOut.writeObject(tag.LOGOUT);
         isConnect = false;
+        peerServerFile.close();
+        peerServerChat.close();
+        serverOut.close();
+        serverIn.close();
+        server.close();
     }
 
     // get friend list on peer -> will remove?
@@ -128,9 +134,11 @@ public class menu {
         }
         serverPeerOut.close();
         serverPeerIn.close();
+        peerServerSocketFile.close();
         peerServerSocket.close();
     }
 
+    // send chat request and wait for answer
     public static void SendChatRequest(peer peerServerChat)
             throws UnknownHostException, IOException, ClassNotFoundException {
         Socket peerServerSocket = new Socket(peerServerChat.getHost(), peerServerChat.getPort());
@@ -194,6 +202,12 @@ public class menu {
         while (true) {
             try {
                 String onlineListXML = (String) serverIn.readObject();
+
+                // logout
+                if (onlineListXML == null) {
+                    return;
+                }
+
                 onlineList = decode.getOnlineList(onlineListXML);
                 System.out.println("Online list update");
 
@@ -203,7 +217,9 @@ public class menu {
                     serverIn.close();
                     server.close();
                 }
-            } catch (Exception e) {
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+                return;
             }
         }
     }

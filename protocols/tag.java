@@ -11,6 +11,8 @@ public class tag {
     public static String CHAT_REQUEST = "CHAT_REQUEST";
     public static String DENY = "DENY";
     public static String ACCEPT = "ACCEPT";
+    public static String LOGOUT = "LOGOUT";
+    public static String EXIT = "EXIT";
 
     public static String FILE_HEAD = "FILE_HEAD";
     public static String FILE_TAIL = "FILE_TAIL";
