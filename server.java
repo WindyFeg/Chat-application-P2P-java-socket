@@ -1,4 +1,3 @@
-package sever;
 
 import java.io.Console;
 import java.io.IOException;

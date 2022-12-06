@@ -1,13 +1,12 @@
-Hello...
+## RUN FILE
+Executable file in bin folder\
+`bin\loginUI` use as a peer\
+`bin\server` run as a server to show other peer in the network\ 
+\Note: run server in terminal `java -jar server.jar`
 
 # Compile File java
-
-<!-- javac -d bin ./UI/*.java
-java ./bin/UI/chatBox
-java loginForm -->
-
-Run file\
-`if($?){javac chatUI.java}; if($?){java chatUI}; del *.class` \
+Compile and run file\
+`if($?){javac server.java}; if($?){java server}; del *.class` \
 `if($?){javac loginUI.java}; if($?){java loginUI}; del *.class`
 
 Clean the Object file \
